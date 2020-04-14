@@ -356,5 +356,15 @@ namespace PacketCannon
             }
             FakeAddressesCount.IsEnabled = DDosCheckBox.IsChecked == true;
         }
+
+        private void HostAddress_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            HostAddress.TextWrapping = TextWrapping.Wrap;
+        }
+
+        private void HostAddress_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            HostAddress.TextWrapping = TextWrapping.NoWrap;
+        }
     }
 }
