@@ -2,6 +2,7 @@
 using PcapDotNet.Packets.Ethernet;
 using System;
 using System.Net;
+using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -90,21 +91,66 @@ namespace PacketCannon
         private void Attacks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Setup.ChangeAttackMode(Attacks.SelectedIndex.ToString());
+
+            if (SlowLorisHeaderCheckBox != null) // IN CREATING OF INT, TEXTBOXES ARE NULL
+            {
+                HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Hidden);
+
+                switch (Attacks.SelectedIndex.ToString())
+                {
+                    case "0":
+                        SlowLorisHeaderCheckBox.Visibility = Visibility.Visible;
+                        SlowLorisHeaderTextBox.Visibility = Visibility.Visible;
+                        SlowLorisKeepAliveDataCheckBox.Visibility = Visibility.Visible;
+                        SlowLorisKeepAliveDataTextBox.Visibility = Visibility.Visible;
+                        break;
+
+                    case "1":
+                        SlowPostHeaderCheckbox.Visibility = Visibility.Visible;
+                        SlowPostHeaderTextBox.Visibility = Visibility.Visible;
+                        break;
+
+                    case "2":
+                        SlowReadUrlCheckBox.Visibility = Visibility.Visible;
+                        SlowReadUrlTextBox.Visibility = Visibility.Visible;
+                        SlowReadWinSizeCheckBox.Visibility = Visibility.Visible;
+                        SlowReadWindowSizeTextBox.Visibility = Visibility.Visible;
+                        break;
+                }
+            }
+        }
+
+        private void HideAllAdditionalSettingsTextAndCheckBoxes(Visibility visibility)
+        {
+            SlowReadWindowSizeTextBox.Visibility = visibility;
+            SlowLorisHeaderTextBox.Visibility = visibility;
+            SlowPostHeaderTextBox.Visibility = visibility;
+            SenderCountTextBox.Visibility = visibility; ;
+            SendersTimeBetweenTextBox.Visibility = visibility;
+            SendersWaveTimeTextBox.Visibility = visibility;
+            StartPortTextBox.Visibility = visibility;
+            PortStepTextBox.Visibility = visibility;
+            SlowLorisKeepAliveDataTextBox.Visibility = visibility;
+            SlowReadUrlTextBox.Visibility = visibility;
+
+            SlowLorisKeepAliveDataCheckBox.Visibility = visibility;
+            SlowLorisHeaderCheckBox.Visibility = visibility;
+            SlowPostHeaderCheckbox.Visibility = visibility;
+            SenderCountCheckBox.Visibility = visibility; ;
+            SendersTimeBetweenCheckBox.Visibility = visibility;
+            SenderWaveTimeCheckBox.Visibility = visibility;
+            StartPortCheckBox.Visibility = visibility;
+            PortStepCheckBox.Visibility = visibility;
+            SlowLorisKeepAliveDataCheckBox.Visibility = visibility;
+            SlowReadUrlCheckBox.Visibility = visibility;
+            SlowReadWinSizeCheckBox.Visibility = visibility;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (AdditionalSettingsCheckBox.IsChecked == true)
-            {
-                AdiSettingsGrid.IsEnabled = true;
-                AdiSettingsGrid.Visibility = Visibility.Visible;
-                DisableAllTextBoxes();
-            }
-            else
-            {
-                AdiSettingsGrid.IsEnabled = false;
-                AdiSettingsGrid.Visibility = Visibility.Hidden;
-            }
+            HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Visible);
+
+            // else HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Hidden);
         }
 
         private void DisableAllTextBoxes()
@@ -120,60 +166,6 @@ namespace PacketCannon
             SlowLorisKeepAliveDataTextBox.IsEnabled = false;
             SlowReadUrlTextBox.IsEnabled = false;
         }
-
-        #region checkboxAndTextBoxes
-
-        private void SlowReadWindowSize_toogle(object sender, RoutedEventArgs e)
-        {
-            SlowReadWindowSizeTextBox.IsEnabled = SlowReadWinSizeCheckBox.IsChecked == true;
-        }
-
-        private void SlowLorisHeader_toogle(object sender, RoutedEventArgs e)
-        {
-            SlowLorisHeaderTextBox.IsEnabled = SlowLorisHeaderCheckBox.IsChecked == true;
-        }
-
-        private void SlowPostHeader_toogle(object sender, RoutedEventArgs e)
-        {
-            SlowPostHeaderTextBox.IsEnabled = SlowPostHeaderCheckbox.IsChecked == true;
-        }
-
-        private void SenderCount_toogle(object sender, RoutedEventArgs e)
-        {
-            SenderCountTextBox.IsEnabled = SenderCountCheckBox.IsChecked == true;
-        }
-
-        private void SenderTime_toogle(object sender, RoutedEventArgs e)
-        {
-            SendersTimeBetweenTextBox.IsEnabled = SendersTimeBetweenCheckBox.IsChecked == true;
-        }
-
-        private void SenderWave_toogle(object sender, RoutedEventArgs e)
-        {
-            SendersWaveTimeTextBox.IsEnabled = SenderWaveTimeCheckBox.IsChecked == true;
-        }
-
-        private void StartPort_toogle(object sender, RoutedEventArgs e)
-        {
-            StartPortTextBox.IsEnabled = StartPortCheckBox.IsChecked == true;
-        }
-
-        private void PortStep_toogle(object sender, RoutedEventArgs e)
-        {
-            PortStepTextBox.IsEnabled = PortStepCheckBox.IsChecked == true;
-        }
-
-        private void SlowLorisKeepAlive_toogle(object sender, RoutedEventArgs e)
-        {
-            SlowLorisKeepAliveDataTextBox.IsEnabled = SlowLorisKeepAliveDataCheckBox.IsChecked == true;
-        }
-
-        private void SlowReadUrl_toogle(object sender, RoutedEventArgs e)
-        {
-            SlowReadUrlTextBox.IsEnabled = SlowReadUrlCheckBox.IsChecked == true;
-        }
-
-        #endregion checkboxAndTextBoxes
 
         private void OnlyNumbers(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
@@ -275,55 +267,52 @@ namespace PacketCannon
 
         private void CheckAdditionalSettings()
         {
-            if (AdditionalSettingsCheckBox.IsChecked == true)
+            Setup.SlowPostContentLength =
+                SlowReadWindowSizeTextBox.IsEnabled && SlowReadWindowSizeTextBox.Text != ""
+                    ? Convert.ToInt32(SlowReadWindowSizeTextBox.Text)
+                    : 1000000;
+
+            Setup.SlowLorisHeaderNotComplete = SlowLorisHeaderTextBox.IsEnabled && SlowLorisHeaderTextBox.Text != ""
+                ? SlowLorisHeaderTextBox.Text
+                : null;
+
+            Setup.SlowPostHeader = SlowPostHeaderTextBox.IsEnabled && SlowPostHeaderTextBox.Text != ""
+                ? SlowPostHeaderTextBox.Text
+                : null;
+
+            if (SenderCountTextBox.IsEnabled && SenderCountTextBox.Text != "")
             {
-                Setup.SlowPostContentLength =
-                    SlowReadWindowSizeTextBox.IsEnabled && SlowReadWindowSizeTextBox.Text != ""
-                        ? Convert.ToInt32(SlowReadWindowSizeTextBox.Text)
-                        : 1000000;
+                Setup.SenderSize = Convert.ToInt32(SenderCountTextBox.Text);
+            }
 
-                Setup.SlowLorisHeaderNotComplete = SlowLorisHeaderTextBox.IsEnabled && SlowLorisHeaderTextBox.Text != ""
-                    ? SlowLorisHeaderTextBox.Text
-                    : null;
+            if (SendersTimeBetweenTextBox.IsEnabled && SendersTimeBetweenTextBox.Text != "")
+            {
+                Setup.SenderTimeOut = Convert.ToInt32(SendersTimeBetweenTextBox.Text);
+            }
 
-                Setup.SlowPostHeader = SlowPostHeaderTextBox.IsEnabled && SlowPostHeaderTextBox.Text != ""
-                    ? SlowPostHeaderTextBox.Text
-                    : null;
+            if (SendersWaveTimeTextBox.IsEnabled && SendersWaveTimeTextBox.Text != "")
+            {
+                Setup.SenderWaveTimeOut = Convert.ToInt32(SendersWaveTimeTextBox.Text);
+            }
 
-                if (SenderCountTextBox.IsEnabled && SenderCountTextBox.Text != "")
-                {
-                    Setup.SenderSize = Convert.ToInt32(SenderCountTextBox.Text);
-                }
+            if (StartPortTextBox.IsEnabled && StartPortTextBox.Text != "")
+            {
+                Setup.SourcePort = Convert.ToInt32(StartPortTextBox.Text);
+            }
 
-                if (SendersTimeBetweenTextBox.IsEnabled && SendersTimeBetweenTextBox.Text != "")
-                {
-                    Setup.SenderTimeOut = Convert.ToInt32(SendersTimeBetweenTextBox.Text);
-                }
+            if (PortStepTextBox.IsEnabled && PortStepTextBox.Text != "")
+            {
+                Setup.PortStep = Convert.ToInt32(PortStepTextBox.Text);
+            }
 
-                if (SendersWaveTimeTextBox.IsEnabled && SendersWaveTimeTextBox.Text != "")
-                {
-                    Setup.SenderWaveTimeOut = Convert.ToInt32(SendersWaveTimeTextBox.Text);
-                }
+            if (SlowLorisKeepAliveDataTextBox.IsEnabled && SlowLorisKeepAliveDataTextBox.Text != "")
+            {
+                Setup.SlowLorisKeepAliveData = SlowLorisKeepAliveDataTextBox.Text;
+            }
 
-                if (StartPortTextBox.IsEnabled && StartPortTextBox.Text != "")
-                {
-                    Setup.SourcePort = Convert.ToInt32(StartPortTextBox.Text);
-                }
-
-                if (PortStepTextBox.IsEnabled && PortStepTextBox.Text != "")
-                {
-                    Setup.PortStep = Convert.ToInt32(PortStepTextBox.Text);
-                }
-
-                if (SlowLorisKeepAliveDataTextBox.IsEnabled && SlowLorisKeepAliveDataTextBox.Text != "")
-                {
-                    Setup.SlowLorisKeepAliveData = SlowLorisKeepAliveDataTextBox.Text;
-                }
-
-                if (SlowReadUrlTextBox.IsEnabled && SlowReadUrlTextBox.Text != "")
-                {
-                    Setup.SlowReadUrl = SlowReadUrlTextBox.Text;
-                }
+            if (SlowReadUrlTextBox.IsEnabled && SlowReadUrlTextBox.Text != "")
+            {
+                Setup.SlowReadUrl = SlowReadUrlTextBox.Text;
             }
         }
 
@@ -357,14 +346,18 @@ namespace PacketCannon
             FakeAddressesCount.IsEnabled = DDosCheckBox.IsChecked == true;
         }
 
-        private void HostAddress_OnGotFocus(object sender, RoutedEventArgs e)
+        private void TextBox_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            HostAddress.TextWrapping = TextWrapping.Wrap;
+            //HostAddress.TextWrapping = TextWrapping.Wrap;
+            var a = (TextBox)e.OriginalSource;
+            if (a != null) a.TextWrapping = TextWrapping.Wrap;
         }
 
-        private void HostAddress_OnLostFocus(object sender, RoutedEventArgs e)
+        private void TextBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            HostAddress.TextWrapping = TextWrapping.NoWrap;
+            //HostAddress.TextWrapping = TextWrapping.NoWrap;
+            var a = (TextBox)e.OriginalSource;
+            if (a != null) a.TextWrapping = TextWrapping.NoWrap;
         }
     }
 }
