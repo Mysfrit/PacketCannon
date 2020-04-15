@@ -1,13 +1,10 @@
 ﻿using PcapDotNet.Core;
 using PcapDotNet.Packets.Ethernet;
 using System;
-using System.Net;
-using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using PcapDotNet.Packets.IpV4;
 
 namespace PacketCannon
 {
@@ -26,6 +23,7 @@ namespace PacketCannon
             InitializeComponent();
 
             this.DataContext = Setup;
+            ResetAllAdditionalSettingsFields();
         }
 
         private void HostIpAddressChanged(object sender, TextChangedEventArgs e)
@@ -96,6 +94,8 @@ namespace PacketCannon
             {
                 HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Hidden);
 
+                ResetAllAdditionalSettingsFields();
+
                 switch (Attacks.SelectedIndex.ToString())
                 {
                     case "0":
@@ -108,6 +108,8 @@ namespace PacketCannon
                     case "1":
                         SlowPostHeaderCheckbox.Visibility = Visibility.Visible;
                         SlowPostHeaderTextBox.Visibility = Visibility.Visible;
+                        SlowPostContentLengthTextBox.Visibility = Visibility.Visible;
+                        SlowPostContentLengthLabel.Visibility = Visibility.Visible;
                         break;
 
                     case "2":
@@ -120,30 +122,56 @@ namespace PacketCannon
             }
         }
 
+        private void ResetAllAdditionalSettingsFields()
+        {
+            SlowLorisHeaderTextBox.Text = $"GET /? 654865241562456 HTTP / 1.1\r\nHost: {HostAddress.Text} \r\n User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\nContent-Length: 42";
+            SlowLorisKeepAliveDataTextBox.Text = "X-a: b";
+
+            SlowReadUrlTextBox.Text = @"/index.html";
+
+            SlowReadWindowSizeTextBox.Text = "10";
+
+            SlowPostHeaderTextBox.Text = "1000000";
+
+            SlowPostContentLengthTextBox.Text = $"POST /textform.php HTTP/1.1\r\nHost: {HostAddress.Text}  \r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\n";
+
+            StartPortTextBox.Text = "5000";
+
+            PortStepTextBox.Text = "1";
+
+            SenderCountTextBox.Text = "500";
+
+            SendersWaveTimeTextBox.Text = "2000";
+
+            SendersTimeBetweenTextBox.Text = "10";
+        }
+
         private void HideAllAdditionalSettingsTextAndCheckBoxes(Visibility visibility)
         {
             SlowReadWindowSizeTextBox.Visibility = visibility;
             SlowLorisHeaderTextBox.Visibility = visibility;
             SlowPostHeaderTextBox.Visibility = visibility;
-            SenderCountTextBox.Visibility = visibility; ;
-            SendersTimeBetweenTextBox.Visibility = visibility;
-            SendersWaveTimeTextBox.Visibility = visibility;
-            StartPortTextBox.Visibility = visibility;
-            PortStepTextBox.Visibility = visibility;
+            //SenderCountTextBox.Visibility = visibility;
+            //SendersTimeBetweenTextBox.Visibility = visibility;
+            //SendersWaveTimeTextBox.Visibility = visibility;
+            //StartPortTextBox.Visibility = visibility;
+            //PortStepTextBox.Visibility = visibility;
             SlowLorisKeepAliveDataTextBox.Visibility = visibility;
             SlowReadUrlTextBox.Visibility = visibility;
+            SlowPostContentLengthTextBox.Visibility = visibility;
 
             SlowLorisKeepAliveDataCheckBox.Visibility = visibility;
             SlowLorisHeaderCheckBox.Visibility = visibility;
             SlowPostHeaderCheckbox.Visibility = visibility;
-            SenderCountCheckBox.Visibility = visibility; ;
-            SendersTimeBetweenCheckBox.Visibility = visibility;
-            SenderWaveTimeCheckBox.Visibility = visibility;
-            StartPortCheckBox.Visibility = visibility;
-            PortStepCheckBox.Visibility = visibility;
+            //SenderCountCheckBox.Visibility = visibility;
+            //SendersTimeBetweenCheckBox.Visibility = visibility;
+            //SenderWaveTimeCheckBox.Visibility = visibility;
+            //StartPortCheckBox.Visibility = visibility;
+            //PortStepCheckBox.Visibility = visibility;
             SlowLorisKeepAliveDataCheckBox.Visibility = visibility;
             SlowReadUrlCheckBox.Visibility = visibility;
             SlowReadWinSizeCheckBox.Visibility = visibility;
+            SlowPostContentLengthLabel.Visibility = visibility;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)

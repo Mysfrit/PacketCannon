@@ -39,6 +39,7 @@ namespace PacketCannon
         public string SlowLorisHeaderNotComplete;
         public string SlowPostHeader;
         public string SlowReadUrl = @"/index.html";
+        public int SlowReadWindowSize = 10;
         public static List<IpV4Address> FakeIpV4Addresses;
         public bool Ddos = false;
         public int DdosCount = 5;
@@ -149,7 +150,7 @@ namespace PacketCannon
 
                             //SLOW-READ
                             case SenderStat.SedingGetForSlowRead:
-                                slowLorisSender.WindowSize = 10;
+                                slowLorisSender.WindowSize = (ushort)SlowReadWindowSize;
                                 slowLorisSender.SendCompleteGetForSlowRead(Communicator);
                                 slowLorisSender.Status = SenderStat.RecievingSlowRead;
                                 break;
