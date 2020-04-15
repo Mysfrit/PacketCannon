@@ -63,6 +63,27 @@
         <Label Name="PortStepCheckBox" Content="Port step" HorizontalAlignment="Left" Margin="365,312,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
         <Label Name="SlowLorisKeepAliveDataCheckBox" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" />
         <Label Name="SlowReadUrlCheckBox" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
+
+        <Label Name="SlowReadWinSizeCheckBox" Content="Slow Read Window size" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="381,44,0,0" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="SlowLorisHeaderCheckBox" Content="Custom Slow Loris Header" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowPostHeaderCheckbox" Content="Custom Slow Post Header" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="SendersTimeBetweenCheckBox" Content="Time between Senders" HorizontalAlignment="Left" Margin="365,228,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="SenderWaveTimeCheckBox" Content="Time between waves" HorizontalAlignment="Left" Margin="365,256,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="StartPortCheckBox" Content="Starting port" HorizontalAlignment="Left" Margin="365,284,0,0" VerticalAlignment="Top" Height="24" Width="176" Visibility="Hidden" />
+        <Label Name="SenderCountCheckBox" Content="Number of Senders" HorizontalAlignment="Left" Margin="365,200,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
+        <TextBox Name="SlowReadWindowSizeTextBox" HorizontalAlignment="Left" Margin="558,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485"  PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
+        <TextBox Name="SlowLorisHeaderTextBox" HorizontalAlignment="Left"  Margin="558,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
+        <TextBox Name="SlowPostHeaderTextBox" HorizontalAlignment="Left"  Margin="558,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485"  GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" />
+        <TextBox Name="SenderCountTextBox" HorizontalAlignment="Left"  Margin="558,200,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="15" Visibility="Hidden" />
+        <TextBox Name="SendersTimeBetweenTextBox" HorizontalAlignment="Left" Height="15" Margin="558,228,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
+        <TextBox Name="SendersWaveTimeTextBox" HorizontalAlignment="Left"  Margin="558,256,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.179,0.304" PreviewTextInput="OnlyNumbers" Height="15" Visibility="Hidden" />
+        <TextBox Name="StartPortTextBox" HorizontalAlignment="Left"  Margin="558,284,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
+        <TextBox Name="PortStepTextBox" HorizontalAlignment="Left"  Margin="558,312,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
+        <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="558,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
+        <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="558,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" />
+        <Label Name="PortStepCheckBox" Content="Port step" HorizontalAlignment="Left" Margin="365,312,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
+        <Label Name="SlowLorisKeepAliveDataCheckBox" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,92,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowReadUrlCheckBox" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,92,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
         <Button Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="20,349,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click" />
         <Button Name ="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="107,349,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="StopButton_Click" />
         <TextBox Name ="HostAddress" HorizontalAlignment="Left"  Margin="107,315,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.558,2.826" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
