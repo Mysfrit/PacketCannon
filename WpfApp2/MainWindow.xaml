@@ -58,11 +58,11 @@
         <TextBox Name="SendersWaveTimeTextBox" HorizontalAlignment="Left"  Margin="558,256,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.179,0.304" PreviewTextInput="OnlyNumbers" Height="15" Visibility="Hidden" />
         <TextBox Name="StartPortTextBox" HorizontalAlignment="Left"  Margin="558,284,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
         <TextBox Name="PortStepTextBox" HorizontalAlignment="Left"  Margin="558,312,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
-        <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="558,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
-        <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="558,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" />
+        <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="558,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
+        <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="558,92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" />
         <Label Name="PortStepCheckBox" Content="Port step" HorizontalAlignment="Left" Margin="365,312,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
-        <Label Name="SlowLorisKeepAliveDataCheckBox" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" />
-        <Label Name="SlowReadUrlCheckBox" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
+        <Label Name="SlowLorisKeepAliveDataCheckBox" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,92,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowReadUrlCheckBox" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,92,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
         <Button Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="20,349,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click" />
         <Button Name ="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="107,349,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="StopButton_Click" />
         <TextBox Name ="HostAddress" HorizontalAlignment="Left"  Margin="107,315,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.558,2.826" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
