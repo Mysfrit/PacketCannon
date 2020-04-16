@@ -35,8 +35,8 @@
         <TextBox Name="TargetMacAddress" Width="Auto" IsEnabled="False"
              Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
              Style="{StaticResource CustomTextBoxTextStyle}" TextChanged="HostIpAddressChanged" Margin="162,151,789,282" />
-        <Button Content="Get Mac Address" HorizontalAlignment="Left" Margin="110,229,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="0.156,-0.1" Click="GetTargetMacButtonClick" />
-        <Button Content="Select interface" HorizontalAlignment="Left" Margin="107,79,0,0" VerticalAlignment="Top" Width="103" Click="ChooseIntButtonClick" />
+        <Button Name="GetMackAddressButton" Content="Get Mac Address" HorizontalAlignment="Left" Margin="110,229,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="0.156,-0.1" Click="GetTargetMacButtonClick" />
+        <Button Name="SelectInterfaceButton" Content="Select interface" HorizontalAlignment="Left" Margin="107,79,0,0" VerticalAlignment="Top" Width="103" Click="ChooseIntButtonClick" />
         <ComboBox Name="Attacks" HorizontalAlignment="Left" Margin="107,267,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Attacks_SelectionChanged">
             <ComboBoxItem Content="SlowLoris" HorizontalAlignment="Left" Width="118" IsSelected="True" />
             <ComboBoxItem Content="Slow Post" HorizontalAlignment="Left" Width="118" />
@@ -44,17 +44,17 @@
         </ComboBox>
 
         <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="558,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" />
-        <Label Name="PortStepCheckBox" Content="Port step" HorizontalAlignment="Left" Margin="365,336,0,0" VerticalAlignment="Top" Height="24" Width="172" />
-        <Label Name="SlowLorisKeepAliveDataCheckBox" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="172" />
-        <Label Name="SlowReadUrlCheckBox" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
+        <Label Name="PortStepLabel" Content="Port step" HorizontalAlignment="Left" Margin="365,333,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowLorisKeepAliveDataLabel" Content="SlowLoris Keep Alive Data" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowReadUrlLabel" Content="SlowRead Url" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" />
 
-        <Label Name="SlowReadWinSizeCheckBox" Content="Slow Read Window size" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="381,44,0,0" Height="24" Width="166" Visibility="Hidden" />
-        <Label Name="SlowLorisHeaderCheckBox" Content="Custom Slow Loris Header" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" />
-        <Label Name="SlowPostHeaderCheckbox" Content="Custom Slow Post Header" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
-        <Label Name="SendersTimeBetweenCheckBox" Content="Time between Senders" HorizontalAlignment="Left" Margin="365,253,0,0" VerticalAlignment="Top" Height="24" Width="166" />
-        <Label Name="SenderWaveTimeCheckBox" Content="Time between waves" HorizontalAlignment="Left" Margin="365,280,0,0" VerticalAlignment="Top" Height="24" Width="166" />
-        <Label Name="StartPortCheckBox" Content="Starting port" HorizontalAlignment="Left" Margin="365,305,0,0" VerticalAlignment="Top" Height="24" Width="176" />
-        <Label Name="SenderCountCheckBox" Content="Number of Senders" HorizontalAlignment="Left" Margin="365,224,0,0" VerticalAlignment="Top" Height="24" Width="166" />
+        <Label Name="SlowReadWinSizeLabel" Content="Slow Read Window size" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="381,44,0,0" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="SlowLorisHeaderLabel" Content="Custom Slow Loris Header" HorizontalAlignment="Left" Margin="381,120,0,0" VerticalAlignment="Top" Height="24" Width="172" />
+        <Label Name="SlowPostHeaderLabel" Content="Custom Slow Post Header" HorizontalAlignment="Left" Margin="381,44,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" />
+        <Label Name="SendersTimeBetweenLabel" Content="Time between Senders" HorizontalAlignment="Left" Margin="365,253,0,0" VerticalAlignment="Top" Height="24" Width="166" />
+        <Label Name="SenderWaveTimeLabel" Content="Time between waves" HorizontalAlignment="Left" Margin="365,277,0,0" VerticalAlignment="Top" Height="24" Width="166" />
+        <Label Name="StartPortLabel" Content="Starting port" HorizontalAlignment="Left" Margin="365,305,0,0" VerticalAlignment="Top" Height="28" Width="172" />
+        <Label Name="SenderCountLabel" Content="Number of Senders" HorizontalAlignment="Left" Margin="365,224,0,0" VerticalAlignment="Top" Height="24" Width="166" />
         <TextBox Name="SlowReadWindowSizeTextBox" HorizontalAlignment="Left" Margin="558,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485"  PreviewTextInput="OnlyNumbers" Visibility="Hidden" />
         <TextBox Name="SlowLorisHeaderTextBox" HorizontalAlignment="Left"  Margin="558,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
         <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="558,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" />
@@ -78,5 +78,7 @@
         <TextBox x:Name ="FakeAddressesCount" HorizontalAlignment="Left" IsEnabled="False"  Margin="114,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="113" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
         <TextBox x:Name ="FakeAddressesMinValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="251,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
         <TextBox x:Name ="FakeAddressesMaxValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="301,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
+        <Label Content="Min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="251,380,0,0" />
+        <Label Content="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="301,380,0,0" />
     </Grid>
 </Window>
