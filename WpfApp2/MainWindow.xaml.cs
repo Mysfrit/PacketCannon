@@ -197,6 +197,9 @@ namespace PacketCannon
             Setup.Terminate = true;
             StopButton.IsEnabled = false;
             StartButton.IsEnabled = true;
+            Attacks.IsEnabled = true;
+            GetMackAddressButton.IsEnabled = true;
+            SelectInterfaceButton.IsEnabled = true;
             _senders.Abort();
         }
 
@@ -212,7 +215,7 @@ namespace PacketCannon
                 Setup.DestinationMac = new MacAddress(TargetMacAddress.Text);
                 Setup.SourceMac = new MacAddress(HostMacAddress.Text);
                 Setup.HostAddress = HostAddress.Text;
-                CheckAdditionalSettings();
+                CheckAndAssertAdditionalSettings();
                 CheckDDosSettings();
                 return true;
             }
@@ -232,17 +235,20 @@ namespace PacketCannon
 
         private void CheckDDosSettings()
         {
-            if (SenderCountTextBox.Text == "")
-            {
-                if (DDosCheckBox.IsChecked == true && Convert.ToInt32(FakeAddressesCount.Text) < 50)
-                {
-                    throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
-                }
-            }
-            else if (DDosCheckBox.IsChecked == true && Convert.ToInt32(SenderCountTextBox.Text) > Convert.ToInt32(FakeAddressesCount.Text))
-            {
-                throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
-            }
+            //if (DDosCheckBox.IsChecked == true)
+            //{
+            //    if (SenderCountTextBox.Text == "")
+            //    {
+            //        if (DDosCheckBox.IsChecked == true && Convert.ToInt32(FakeAddressesCount.Text) < 50)
+            //        {
+            //            throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
+            //        }
+            //    }
+            //    else if (DDosCheckBox.IsChecked == true && Convert.ToInt32(SenderCountTextBox.Text) >
+            //             Convert.ToInt32(FakeAddressesCount.Text))
+            //    {
+            //        throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
+            //    }
 
             if ((bool)DDosCheckBox.IsChecked)
             {
@@ -251,10 +257,18 @@ namespace PacketCannon
                 {
                     Setup.DdosCount = Convert.ToInt32(FakeAddressesCount.Text);
                 }
+
+                if (Convert.ToInt32(FakeAddressesMinValue.Text) < 1 && Convert.ToInt32(FakeAddressesMaxValue.Text) < Convert.ToInt32(FakeAddressesMinValue.Text) && Convert.ToInt32(FakeAddressesMaxValue.Text) > 254)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                Setup.FakeIpAddressMin = Convert.ToInt32(FakeAddressesMinValue.Text);
+                Setup.FakeIpAddressMax = Convert.ToInt32(FakeAddressesMaxValue.Text);
             }
         }
 
-        private void CheckAdditionalSettings()
+        private void CheckAndAssertAdditionalSettings()
         {
             switch (Attacks.SelectedIndex.ToString())
             {

