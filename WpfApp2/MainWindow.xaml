@@ -77,10 +77,11 @@
         <Label Content="Host IP address" HorizontalAlignment="Left" Margin="110,7,0,0" VerticalAlignment="Top" Width="100" />
         <Label Content="Target IP address" HorizontalAlignment="Left" Margin="107,120,0,0" VerticalAlignment="Top" Width="107" />
         <CheckBox x:Name ="DDosCheckBox" Content="Enable DDoS" HorizontalAlignment="Left" Margin="20,406,0,0" VerticalAlignment="Top" Click="EnableDDosClicked" />
-        <TextBox x:Name ="FakeAddressesCount" HorizontalAlignment="Left" IsEnabled="False"  Margin="114,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="113" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
-        <TextBox x:Name ="FakeAddressesMinValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="251,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
-        <TextBox x:Name ="FakeAddressesMaxValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="301,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
-        <Label Content="Min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="251,380,0,0" />
-        <Label Content="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="301,380,0,0" />
+        <TextBox x:Name ="FakeAddressesCount" HorizontalAlignment="Left" IsEnabled="False"  Margin="114,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
+        <TextBox x:Name ="FakeAddressesMinValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="160,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
+        <TextBox x:Name ="FakeAddressesMaxValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="210,406,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" />
+        <Label Content="Min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="160,380,0,0" />
+        <Label Content="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="210,380,0,0" />
+        <Label Content="Count" HorizontalAlignment="Left" Margin="107,380,0,0" VerticalAlignment="Top" />
     </Grid>
 </Window>

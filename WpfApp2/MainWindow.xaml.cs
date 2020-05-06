@@ -258,7 +258,10 @@ namespace PacketCannon
                     Setup.DdosCount = Convert.ToInt32(FakeAddressesCount.Text);
                 }
 
-                if (Convert.ToInt32(FakeAddressesMinValue.Text) < 1 && Convert.ToInt32(FakeAddressesMaxValue.Text) < Convert.ToInt32(FakeAddressesMinValue.Text) && Convert.ToInt32(FakeAddressesMaxValue.Text) > 254)
+                if (Convert.ToInt32(FakeAddressesMinValue.Text) < 1 ||
+                    Convert.ToInt32(FakeAddressesMaxValue.Text) < Convert.ToInt32(FakeAddressesMinValue.Text) ||
+                    Convert.ToInt32(FakeAddressesMaxValue.Text) > 254 ||
+                    Convert.ToInt32(FakeAddressesMaxValue.Text) - Convert.ToInt32(FakeAddressesMinValue.Text) < Convert.ToInt32(FakeAddressesCount.Text))
                 {
                     throw new ArgumentOutOfRangeException();
                 }

@@ -41,7 +41,7 @@ namespace PacketCannon
 
             SlowLorisHeaderNotComplete = slowLorisHeaderNotComplete;
 
-            SlowPostHeader = slowPostHeader + $"\r\nContent-Length: {slowPostHeaderContentLength}\r\n\r\n";
+            SlowPostHeader = slowPostHeader + $"\r\nContent-Length: {slowPostHeaderContentLength}\r\n\r\nname=";
 
             SlowReadUrl = slowReadUrl;
             SlowPostContentLength = slowPostHeaderContentLength;
@@ -401,7 +401,7 @@ namespace PacketCannon
         public static ushort DestinationPort = 80;
         public uint SeqNumber = (uint)new Random().Next();
         public uint ExpectedAckNumber;
-        public ushort WindowSize = 8192;
+        public ushort WindowSize = 15;
         public uint AckNumber;
         private ushort _identificatioNumber = (ushort)new Random().Next(100, 1000);
     }

