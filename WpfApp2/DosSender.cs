@@ -19,7 +19,7 @@ namespace PacketCannon
 {
     public class DosSender
     {
-        public DosSender(IPacketDevice packetDevice, string sourceIp, string destIp, string host, string slowLorisKeepAliveData, string slowLorisHeaderNotComplete, int slowPostHeaderContentLength, string slowPostHeader, string slowReadUrl, int startPort, int portStep, bool ddos = false)
+        public DosSender(IPacketDevice packetDevice, string sourceIp, string destIp, MacAddress destMac, MacAddress sourceMac, string host, string slowLorisKeepAliveData, string slowLorisHeaderNotComplete, int slowPostHeaderContentLength, string slowPostHeader, string slowReadUrl, int startPort, int portStep, bool ddos = false)
         {
             if (ddos)
             {
@@ -31,13 +31,9 @@ namespace PacketCannon
                 SourceIpV4 = new IpV4Address(sourceIp);
             }
             DestinationIpV4 = new IpV4Address(destIp);
-            SourceMac = new MacAddress(Regex.Replace(
-                NetworkInterface.GetAllNetworkInterfaces()
-                    .FirstOrDefault(netInt => packetDevice.Name.Contains(netInt.Id))
-                    ?.GetPhysicalAddress().ToString() ?? throw new InvalidOperationException(),
-                    ".{2}", "$0:").TrimEnd(':'));
+            SourceMac = sourceMac;
 
-            DestinationMac = DosController.GetMacFromIp(destIp);
+            DestinationMac = destMac;
 
             SlowLorisHeaderNotComplete = slowLorisHeaderNotComplete;
 
@@ -63,6 +59,7 @@ namespace PacketCannon
         public readonly string SlowLorisHeaderNotComplete;
         public readonly string SlowPostHeader;
         public string SlowReadUrl { get; set; }
+        public int Waited = 0;
 
         public void SendSyn(PacketCommunicator communicator)
         {
