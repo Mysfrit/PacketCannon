@@ -159,11 +159,6 @@ namespace PacketCannon
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SedingSlowPostHeader;
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
-                                // using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.Now:h: mm:ss tt}-- SlowPostHeader");
-                                // }
 
                                 break;
 
@@ -171,11 +166,7 @@ namespace PacketCannon
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowRead:
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SedingGetForSlowRead;
-                                //using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadGet");
-                                // }
+
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
@@ -183,22 +174,14 @@ namespace PacketCannon
                             case SenderStat.SendingSlowLorisGetHeader:
                                 dosSender.SendGetNotComplete(Communicator);
                                 dosSender.Status = SenderStat.SendingKeepAliveForSlowLoris;
-                                // using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowlorisGetHeader");
-                                // }
+
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisGetHeader";
                                 break;
 
                             //SLOW-LORIS
                             case SenderStat.SendingKeepAliveForSlowLoris:
                                 dosSender.SendSlowLorisKeepAlive(Communicator);
-                                // using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowlorisKeepAlive");
-                                // }
+
                                 // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisKeepAlive";
                                 break;
 
@@ -206,22 +189,14 @@ namespace PacketCannon
                             case SenderStat.SedingSlowPostHeader:
                                 dosSender.SendSlowPostHeader(Communicator);
                                 dosSender.Status = SenderStat.SedingKeepAliveForSlowPost;
-                                // using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowPostHeader");
-                                // }
+
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SedingKeepAliveForSlowPost:
                                 dosSender.SendSlowPostKeepAlive(Communicator);
-                                // using (StreamWriter sw = File.AppendText(path))
-                                // {
-                                //     sw.WriteLine(
-                                //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowPostKeepAlive");
-                                // }
+
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostKeepAlive";
                                 break;
 
@@ -230,11 +205,7 @@ namespace PacketCannon
                                 dosSender.WindowSize = (ushort)SlowReadWindowSize;
                                 dosSender.SendSlowReadCompleteGet(Communicator);
                                 dosSender.Status = SenderStat.RecievingSlowRead;
-                                //using (StreamWriter sw = File.AppendText(path))
-                                //{
-                                //    sw.WriteLine(
-                                //        $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadGet");
-                                //}
+
                                 // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
@@ -242,11 +213,7 @@ namespace PacketCannon
                             case SenderStat.SendKeepAliveAckForSlowRead:
                                 dosSender.Status = SenderStat.RecievingSlowRead;
                                 dosSender.SendAck(Communicator);
-                                //using (StreamWriter sw = File.AppendText(path))
-                                //{
-                                //    sw.WriteLine(
-                                //        $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadKeepAlive");
-                                //}
+
                                 // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadKeepAlive";
                                 break;
 
