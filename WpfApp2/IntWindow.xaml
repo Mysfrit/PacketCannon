@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
         Title="Interface window" Height="450" Width="800" BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
-    <Grid>
-        <ListBox Name="Intlist" HorizontalAlignment="Left" Height="402" Margin="10,10,0,0" VerticalAlignment="Top" Width="774" SelectionChanged="IntList_SelectionChanged" />
+    <Grid Background="#FF111111">
+        <ListBox Name="Intlist" BorderBrush="#FF850808" HorizontalAlignment="Left" Background="#FF111111" Height="384" Margin="10,10,0,0" VerticalAlignment="Top" Width="756" SelectionChanged="IntList_SelectionChanged" Foreground="White" />
     </Grid>
 </Window>

