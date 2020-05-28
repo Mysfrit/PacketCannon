@@ -3,102 +3,110 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        Title="Packet Cannon | Medieval solution to modern problems" Height="492.667" Width="1090.667"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d"
+        Title="Packet Cannon  |  Medieval solution to modern problems  |  Version 1.0" Height="571.667" Width="882.667"
         Icon="logo.ico">
-    <Window.Resources>
-
-        <Style x:Key="CustomTextBoxTextStyle" TargetType="TextBox">
-
-            <Setter Property="Foreground" Value="Green" />
-            <Setter Property="MaxLength" Value="40" />
-            <Setter Property="Width" Value="392" />
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Trigger.Setters>
-                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}" />
-                        <Setter Property="Background" Value="Red" />
-                    </Trigger.Setters>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-    <Grid Background="#FF111111">
+    <!-- <Window.Resources>                                                                                                                                     -->
+    <!--                                                                                                                                                        -->
+    <!--     <Style x:Key="CustomTextBoxTextStyle" TargetType="TextBox">                                                                                        -->
+    <!--                                                                                                                                                        -->
+    <!--         <Setter Property="Foreground" Value="Green" />                                                                                                 -->
+    <!--         <Setter Property="MaxLength" Value="40" />                                                                                                     -->
+    <!--         <Setter Property="Width" Value="392" />                                                                                                        -->
+    <!--         <Style.Triggers>                                                                                                                               -->
+    <!--             <Trigger Property="Validation.HasError" Value="True">                                                                                      -->
+    <!--                 <Trigger.Setters>                                                                                                                      -->
+    <!--                     <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}" />      -->
+    <!--                     <Setter Property="Background" Value="Red" />                                                                                       -->
+    <!--                 </Trigger.Setters>                                                                                                                     -->
+    <!--             </Trigger>                                                                                                                                 -->
+    <!--         </Style.Triggers>                                                                                                                              -->
+    <!--     </Style>                                                                                                                                           -->
+    <!-- </Window.Resources>                                                                                                                                    -->
+    <Grid Background="#FF111111" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="490*" />
+            <RowDefinition Height="53*" />
+        </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="62*" />
-            <ColumnDefinition Width="307*" />
-            <ColumnDefinition Width="716*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="147*" />
+            <ColumnDefinition Width="152*" />
+            <ColumnDefinition Width="599*" />
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="235" Margin="10,10,0,0" VerticalAlignment="Top" Width="338" Background="#FF343434" CornerRadius="8,8,8,8" Grid.ColumnSpan="2"></Border>
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="174" Margin="10,15,0,0" VerticalAlignment="Top" Width="679" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="2"></Border>
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="176" Margin="10,221,0,0" VerticalAlignment="Top" Width="317" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="2"></Border>
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="82" Margin="35,255,0,0" VerticalAlignment="Top" Width="159" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="1">
-            <Label Content="Attack mode" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Margin="38,9,0,0" />
+        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="235" Margin="0,10,0,0" VerticalAlignment="Top" Width="296" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="1" Grid.ColumnSpan="3" />
+        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="235" Margin="18,10,0,0" VerticalAlignment="Top" Width="530" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="3"></Border>
+        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="187" Margin="18,255,0,0" VerticalAlignment="Top" Width="531" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="3"></Border>
+        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="187" Margin="0,255,0,0" VerticalAlignment="Top" Width="296" Background="#FF343434" CornerRadius="8,8,8,8" Grid.ColumnSpan="3" Grid.Column="1">
+            <Label Content="Attack mode" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Margin="105,9,0,0" />
         </Border>
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="63" Margin="15,352,0,0" VerticalAlignment="Top" Width="192" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="1" />
-        <Border BorderBrush="#FF850808" BorderThickness="1" HorizontalAlignment="Left" Height="147" Margin="441,210,0,0" VerticalAlignment="Top" Width="128" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="2" />
-        <TextBox Name="HostIpAddress" Width="Auto" IsEnabled="False"
-             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
-             Style="{StaticResource CustomTextBoxTextStyle}" TextChanged="HostIpAddressChanged" Margin="29,49,206,384" Grid.ColumnSpan="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="TargetIpAddress" Width="Auto"
-             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
-             Style="{StaticResource CustomTextBoxTextStyle}" TextChanged="TargetIpAddressChanged" Margin="29,168,206,265" RenderTransformOrigin="-0.483,0.226" Grid.ColumnSpan="2" Foreground="White" Background="#FF646464" />
-        <TextBox Name="HostMacAddress" Width="Auto" IsEnabled="False"
-             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
-             Style="{StaticResource CustomTextBoxTextStyle}" TextChanged="HostIpAddressChanged" Margin="119,49,54,382" Grid.Column="1" Background="#FF646464" Foreground="White" />
-        <TextBox Name="TargetMacAddress" Width="Auto" IsEnabled="False"
-             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
-             Style="{StaticResource CustomTextBoxTextStyle}" TextChanged="HostIpAddressChanged" Margin="119,168,54,265" Grid.Column="1" Foreground="White" Background="#FF646464" />
-        <Button Name="GetMackAddressButton" Content="Get Mac Address" HorizontalAlignment="Left" Margin="64,216,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="0.156,-0.1" Click="GetTargetMacButtonClick" Grid.Column="1" Background="#FF381818" Foreground="White" />
-        <Button Name="SelectInterfaceButton" Content="Select interface" HorizontalAlignment="Left" Margin="64,97,0,0" VerticalAlignment="Top" Width="103" Click="ChooseIntButtonClick" Grid.Column="1" BorderBrush="#FF4F4E4E" Background="#FF381818" Foreground="White" />
-        <ComboBox Name="Attacks" HorizontalAlignment="Left" Margin="51,295,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Attacks_SelectionChanged" Grid.Column="1">
+        <Border BorderBrush="#FF850808" BorderThickness="1" Height="63" Margin="36,455,351,0" VerticalAlignment="Top" Background="#FF343434" CornerRadius="8,8,8,8" Grid.Column="3" Grid.RowSpan="2" />
+        <TextBox Name="HostIpAddress" IsEnabled="False"
+             Text="{Binding Name }"
+              TextChanged="HostIpAddressChanged"  Margin="17,60,5,401" Background="#FF646464" Foreground="White" Grid.Column="1" />
+        <TextBox Name="TargetIpAddress"
+             Text="{Binding Name}"
+             TextChanged="TargetIpAddressChanged" Margin="17,170,5,291"  RenderTransformOrigin="-0.483,0.226" Foreground="White" Background="#FF646464" Grid.Column="1" />
+        <TextBox Name="HostMacAddress" IsEnabled="False"
+             Text="{Binding Name}"
+              TextChanged="HostIpAddressChanged" Margin="14,59,13,402" Grid.Column="2" Background="#FF646464" Foreground="White" RenderTransformOrigin="0.65,0.567" />
+        <TextBox Name="TargetMacAddress" IsEnabled="False"
+             Text="{Binding Name}"
+              TextChanged="HostIpAddressChanged" Margin="14,170,13,291"  Grid.Column="2" Foreground="White" Background="#FF646464" />
+        <Button Name="GetMackAddressButton" Content="Get Mac Address" HorizontalAlignment="Left" Margin="92,215,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="0.156,-0.1" Click="GetTargetMacButtonClick" Grid.Column="1" Background="#FF381818" Foreground="White" Height="20" Grid.ColumnSpan="2" />
+        <Button Name="SelectInterfaceButton" Content="Select interface" HorizontalAlignment="Left" Margin="92,102,0,0" VerticalAlignment="Top" Width="103" Click="ChooseIntButtonClick" Grid.Column="1" BorderBrush="#FF4F4E4E" Background="#FF381818" Foreground="White" Height="20" Grid.ColumnSpan="2" />
+        <ComboBox Name="Attacks" HorizontalAlignment="Left" Margin="79,297,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Attacks_SelectionChanged" Grid.Column="1" RenderTransformOrigin="0.617,0.727" Height="22" Grid.ColumnSpan="2">
             <ComboBoxItem Content="Slowloris" HorizontalAlignment="Left" Width="118" IsSelected="True" />
             <ComboBoxItem Content="Slow Post" HorizontalAlignment="Left" Width="118" />
             <ComboBoxItem Content="Slow Read" HorizontalAlignment="Left" Width="118" />
         </ComboBox>
 
-        <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="189,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <Label Name="PortStepLabel" Content="Port step" HorizontalAlignment="Left" Margin="12,333,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="2" />
+        <TextBox Name="SlowReadUrlTextBox" HorizontalAlignment="Left"  Margin="213,182,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323" Visibility="Hidden" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus"  Grid.Column="3" Background="#FF646464" Foreground="White" Height="18" />
+        <Label Name="PortStepLabel" Content="Port step" HorizontalAlignment="Left" Margin="36,375,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="3" />
 
-        <Label Name="SlowLorisKeepAliveDataLabel" Content="Slowloris keep alive data" HorizontalAlignment="Left" Margin="12,149,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="2" />
-        <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="189,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <Label Name="SlowLorisHeaderLabel" Content="Slowloris header" HorizontalAlignment="Left" Margin="12,44,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="2" />
-        <TextBox Name="SlowLorisHeaderTextBox" HorizontalAlignment="Left"  Margin="189,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Grid.Column="2" Background="#FF646464" Foreground="White" />
+        <Label Name="SlowLorisKeepAliveDataLabel" Content="Slowloris keep alive data" HorizontalAlignment="Left" Margin="36,176,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="3" />
+        <TextBox Name="SlowLorisKeepAliveDataTextBox" HorizontalAlignment="Left"  Margin="213,182,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Grid.Column="3" Background="#FF646464" Foreground="White" Height="18" />
+        <Label Name="SlowLorisHeaderLabel" Content="Slowloris header" HorizontalAlignment="Left" Margin="36,58,0,0" VerticalAlignment="Top" Height="24" Width="172" Foreground="White" Grid.Column="3" />
+        <TextBox Name="SlowLorisHeaderTextBox" HorizontalAlignment="Left"  Margin="213,34,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323"  Grid.Column="3" Background="#FF646464" Foreground="White" Height="110" />
 
-        <Label Name="SlowReadUrlLabel" Content="SlowRead Url" HorizontalAlignment="Left" Margin="12,120,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" Grid.Column="2" Foreground="White" />
-        <Label Name="SlowReadWinSizeLabel" Content="Slow Read window size" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,44,0,0" Height="24" Width="166" Visibility="Hidden" Grid.Column="2" Foreground="White" />
-        <Label Name="SlowPostHeaderLabel" Content="Slow Post header" HorizontalAlignment="Left" Margin="12,44,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" Grid.Column="2" Foreground="White" />
-        <Label Name="SlowPostContentLengthLabel" Content="Slow Post payload size" HorizontalAlignment="Left" Margin="12,149,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" Grid.Column="2" Foreground="White" />
-        <Label Name="SendersTimeBetweenLabel" Content="Time between senders" HorizontalAlignment="Left" Margin="12,249,0,0" VerticalAlignment="Top" Height="24" Width="166" Foreground="White" Grid.Column="2" />
-        <Label Name="SenderWaveTimeLabel" Content="Time between waves" HorizontalAlignment="Left" Margin="12,277,0,0" VerticalAlignment="Top" Height="24" Width="166" Foreground="White" Grid.Column="2" />
-        <Label Name="StartPortLabel" Content="Starting port" HorizontalAlignment="Left" Margin="12,305,0,0" VerticalAlignment="Top" Height="28" Width="172" Foreground="White" Grid.Column="2" />
-        <Label Name="SenderCountLabel" Content="Number of senders" HorizontalAlignment="Left" Margin="12,221,0,0" VerticalAlignment="Top" Height="24" Width="166" Foreground="White" Grid.Column="2" />
-        <TextBox Name="SlowReadWindowSizeTextBox" HorizontalAlignment="Left" Margin="189,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485"  PreviewTextInput="OnlyNumbers" Visibility="Hidden" Grid.Column="2" Background="#FF646464" Foreground="White" />
+        <Label Name="SlowReadUrlLabel" Content="SlowRead Url" HorizontalAlignment="Left" Margin="36,176,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden"  Grid.Column="3" Foreground="White" />
+        <Label Name="SlowReadWinSizeLabel" Content="Slow Read window size" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="36,58,0,0" Height="24" Width="166" Visibility="Hidden" Grid.Column="3" Foreground="White" />
+        <Label Name="SlowPostHeaderLabel" Content="Slow Post header" HorizontalAlignment="Left" Margin="36,58,0,0" VerticalAlignment="Top" Height="24" Width="166" Visibility="Hidden" Grid.Column="3" Foreground="White" />
+        <Label Name="SlowPostContentLengthLabel" Content="Slow Post payload size" HorizontalAlignment="Left" Margin="36,176,0,0" VerticalAlignment="Top" Height="24" Width="172" Visibility="Hidden" Grid.Column="3" Foreground="White" />
+        <Label Name="SendersTimeBetweenLabel" Content="Delay between senders [ms]" HorizontalAlignment="Left" Margin="36,291,0,0" VerticalAlignment="Top" Height="28" Width="166" Foreground="White" Grid.Column="3" />
+        <Label Name="SenderWaveTimeLabel" Content="Delay between waves [ms]" HorizontalAlignment="Left" Margin="36,319,0,0" VerticalAlignment="Top" Height="28" Width="166" Foreground="White" Grid.Column="3" />
+        <Label Name="StartPortLabel" Content="Starting port" HorizontalAlignment="Left" Margin="36,347,0,0" VerticalAlignment="Top" Height="28" Width="172" Foreground="White" Grid.Column="3" />
+        <Label Name="SenderCountLabel" Content="Total number of connections" HorizontalAlignment="Left" Margin="36,263,0,0" VerticalAlignment="Top" Height="24" Width="166" Foreground="White" Grid.Column="3" />
+        <TextBox Name="SlowReadWindowSizeTextBox" HorizontalAlignment="Left" Margin="213,64,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323"  PreviewTextInput="OnlyNumbers" Visibility="Hidden"  Grid.Column="3" Background="#FF646464" Foreground="White" Height="18" />
 
-        <TextBox Name="SlowPostHeaderTextBox" HorizontalAlignment="Left"  Margin="189,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485"  GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="SlowPostContentLengthTextBox" HorizontalAlignment="Left"  Margin="189,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="485" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" Grid.Column="2" Background="#FF646464" Foreground="White" />
+        <TextBox Name="SlowPostHeaderTextBox" HorizontalAlignment="Left"  Margin="213,34,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323"  GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" Grid.Column="3" Background="#FF646464" Foreground="White" Height="110" />
+        <TextBox Name="SlowPostContentLengthTextBox" HorizontalAlignment="Left"  Margin="213,182,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="323" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Visibility="Hidden" Grid.Column="3" Background="#FF646464" Foreground="White" Height="18" />
 
-        <TextBox Name="SenderCountTextBox" HorizontalAlignment="Left"  Margin="189,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="SendersTimeBetweenTextBox" HorizontalAlignment="Left" Height="18" Margin="189,255,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="SendersWaveTimeTextBox" HorizontalAlignment="Left"  Margin="189,283,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.179,0.304" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="StartPortTextBox" HorizontalAlignment="Left"  Margin="189,311,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <TextBox Name="PortStepTextBox" HorizontalAlignment="Left"  Margin="189,339,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="2" Background="#FF646464" Foreground="White" />
+        <TextBox Name="SenderCountTextBox" HorizontalAlignment="Left"  Margin="213,269,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="3" Background="#FF646464" Foreground="White" />
+        <TextBox Name="SendersTimeBetweenTextBox" HorizontalAlignment="Left" Height="18" Margin="213,297,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Grid.Column="3" Background="#FF646464" Foreground="White" />
+        <TextBox Name="SendersWaveTimeTextBox" HorizontalAlignment="Left"  Margin="213,325,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.179,0.304" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="3" Background="#FF646464" Foreground="White" />
+        <TextBox Name="StartPortTextBox" HorizontalAlignment="Left"  Margin="213,353,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="3" Background="#FF646464" Foreground="White" />
+        <TextBox Name="PortStepTextBox" HorizontalAlignment="Left"  Margin="213,381,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="109" PreviewTextInput="OnlyNumbers" Height="18" Grid.Column="3" Background="#FF646464" Foreground="White" />
 
-        <Button Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="26,382,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click" Grid.Column="1" Foreground="White" Background="#FF381818" />
-        <Button Name ="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="119,382,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="StopButton_Click" Grid.Column="1" Foreground="White" Background="#FF381818" BorderBrush="#FF441212" />
-        <TextBox Name ="HostAddress" HorizontalAlignment="Left"  Margin="189,369,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.558,2.826" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Grid.Column="2" Background="#FF646464" Foreground="White" />
-        <Label Content="Server URL" HorizontalAlignment="Left" Margin="10,361,0,0" VerticalAlignment="Top" Width="85" Foreground="White" Grid.Column="2" />
-        <Label Content="Host IP address" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Width="100" Foreground="White" Grid.Column="1" />
-        <Label Content="Target IP address" HorizontalAlignment="Left" Margin="64,137,0,0" VerticalAlignment="Top" Width="107" Foreground="White" Grid.Column="1" />
-        <CheckBox x:Name ="DDosCheckBox"  Content="Enable DDoS" HorizontalAlignment="Left" Margin="456,221,0,0" VerticalAlignment="Top" Click="EnableDDosClicked" Foreground="White" Grid.Column="2" />
-        <TextBox x:Name ="FakeAddressesCount" HorizontalAlignment="Left" IsEnabled="False"  Margin="482,283,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Grid.Column="2" Foreground="White" Background="#FF646464" />
-        <TextBox x:Name ="FakeAddressesMinValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="456,333,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Grid.Column="2" Foreground="White" Background="#FF646464" />
-        <TextBox x:Name ="FakeAddressesMaxValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="514,333,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Grid.Column="2" Foreground="White" Background="#FF646464" />
-        <Label Content="Min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="456,305,0,0" Foreground="White" Grid.Column="2" />
-        <Label Content="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="515,303,0,0" Foreground="White" Grid.Column="2" />
-        <Label Content="Count" HorizontalAlignment="Left" Margin="482,255,0,0" VerticalAlignment="Top" Foreground="White" Grid.Column="2" />
-        <Label Content="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="494,325,0,0" Foreground="White" Grid.Column="2" />
-        <Label Content="Attack!" Grid.Column="1" HorizontalAlignment="Left" Margin="85,352,0,0" VerticalAlignment="Top" Width="60" Foreground="White" />
+        <Button Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click" Grid.Column="3" Foreground="White" Background="#FF381818" Height="20" Grid.Row="1" />
+        <Button Name ="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="140,0,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="StopButton_Click" Grid.Column="3" Foreground="White" Background="#FF381818" BorderBrush="#FF441212" Height="20" Grid.Row="1" />
+        <TextBox Name ="HostAddress" HorizontalAlignment="Left"  Margin="213,411,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="109" RenderTransformOrigin="0.558,2.826" GotFocus="TextBox_OnGotFocus" LostFocus="TextBox_OnLostFocus" Grid.Column="3" Background="#FF646464" Foreground="White" Height="18" />
+        <Label Content="Server URL" HorizontalAlignment="Left" Margin="34,403,0,0" VerticalAlignment="Top" Width="85" Foreground="White" Grid.Column="3" Height="26" />
+        <Label Content="Host IP address" HorizontalAlignment="Left" Margin="99,26,0,0" VerticalAlignment="Top" Width="100" Foreground="White" Grid.Column="1" Height="26" Grid.ColumnSpan="2" />
+        <Label Content="Target IP address" HorizontalAlignment="Left" Margin="92,137,0,0" VerticalAlignment="Top" Width="107" Foreground="White" Grid.Column="1" Height="26" Grid.ColumnSpan="2" />
+        <CheckBox x:Name ="DDosCheckBox"  Content="Enable DDoS" HorizontalAlignment="Left" Margin="92,341,0,0" VerticalAlignment="Top" Click="EnableDDosClicked" Foreground="White" Grid.Column="1" Height="15" Width="89" Grid.ColumnSpan="2" />
+        <TextBox x:Name ="FakeAddressesCount" HorizontalAlignment="Left" IsEnabled="False"  Margin="59,410,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Foreground="White" Background="#FF646464" Grid.Column="1" Height="18" />
+        <TextBox x:Name ="FakeAddressesMinValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="9,411,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Grid.Column="2" Foreground="White" Background="#FF646464" Height="18" />
+        <TextBox x:Name ="FakeAddressesMaxValue" HorizontalAlignment="Left" IsEnabled="False"  Margin="65,411,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="33" RenderTransformOrigin="0.558,2.826" PreviewTextInput="OnlyNumbers" Grid.Column="2" Foreground="White" Background="#FF646464" Height="18" />
+        <Label Content="Min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="9,385,0,0" Foreground="White" Grid.Column="2" Height="26" Width="30" RenderTransformOrigin="-0.333,0.5" />
+        <Label Content="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="65,385,0,0" Foreground="White" Grid.Column="2" Height="26" Width="32" />
+        <Label Content="Number of IP's" HorizontalAlignment="Left" Margin="44,385,0,0" VerticalAlignment="Top" Foreground="White" Grid.Column="1" Height="26" Width="91" />
+        <Label Content="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,405,0,0" Foreground="White" Grid.Column="2" Height="26" Width="15" />
+        <Label Content="Attack!" Grid.Column="3" HorizontalAlignment="Left" Margin="103,455,0,0" VerticalAlignment="Top" Width="60" Foreground="White" Height="26" />
+        <Image Name="LoadingWheel" gif:ImageBehavior.AnimatedSource="8.gif" Grid.Column="3" HorizontalAlignment="Left" Height="64" Visibility="Hidden" Margin="247,455,0,0" VerticalAlignment="Top" Width="87" Grid.RowSpan="2" />
+        <Label Content="Last IP octet:" Grid.Column="2" HorizontalAlignment="Left" Margin="14,367,0,0" VerticalAlignment="Top" Foreground="White" />
     </Grid>
 </Window>

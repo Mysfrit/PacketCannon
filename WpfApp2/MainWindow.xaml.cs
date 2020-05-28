@@ -70,7 +70,7 @@ namespace PacketCannon
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, "DOS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, "Packet Cannon", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace PacketCannon
                     TargetMacAddress.Text = DosController.GetMacFromIp(DosController.GetDefaultGateway().ToString()).ToString();
                     return;
                 }
-                MessageBox.Show("INVALID IP ADDRESS GIVEN", "DOS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("INVALID IP ADDRESS GIVEN", "Packet Cannon", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else TargetMacAddress.Text = a;
         }
@@ -183,6 +183,7 @@ namespace PacketCannon
             {
                 _senders = new Thread(Setup.StartSenders);
                 _senders.Start();
+                LoadingWheel.Visibility = Visibility.Visible;
             }
             else
             {
@@ -198,9 +199,11 @@ namespace PacketCannon
             StopButton.IsEnabled = false;
             StartButton.IsEnabled = true;
             Attacks.IsEnabled = true;
+
             GetMackAddressButton.IsEnabled = true;
             SelectInterfaceButton.IsEnabled = true;
             _senders.Abort();
+            LoadingWheel.Visibility = Visibility.Hidden;
         }
 
         private bool CheckAllRequiredFields()
@@ -221,11 +224,11 @@ namespace PacketCannon
             }
             catch (ArgumentOutOfRangeException e)
             {
-                MessageBox.Show(e.ParamName, "DOS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(e.Message, "Packet Cannon", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception e)
             {
-                MessageBox.Show("Some field with wrong parameters\n" + e.Message, "DOS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Some field are with wrong parameters\n" + e.Message, "Packet Cannon", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             Setup.Terminate = true;
             StopButton.IsEnabled = false;
@@ -235,21 +238,6 @@ namespace PacketCannon
 
         private void CheckDDosSettings()
         {
-            //if (DDosCheckBox.IsChecked == true)
-            //{
-            //    if (SenderCountTextBox.Text == "")
-            //    {
-            //        if (DDosCheckBox.IsChecked == true && Convert.ToInt32(FakeAddressesCount.Text) < 50)
-            //        {
-            //            throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
-            //        }
-            //    }
-            //    else if (DDosCheckBox.IsChecked == true && Convert.ToInt32(SenderCountTextBox.Text) >
-            //             Convert.ToInt32(FakeAddressesCount.Text))
-            //    {
-            //        throw new ArgumentOutOfRangeException("Dont have enough addresses for every sender");
-            //    }
-
             if ((bool)DDosCheckBox.IsChecked)
             {
                 Setup.Ddos = true;
@@ -263,12 +251,13 @@ namespace PacketCannon
                     Convert.ToInt32(FakeAddressesMaxValue.Text) > 254 ||
                     Convert.ToInt32(FakeAddressesMaxValue.Text) - Convert.ToInt32(FakeAddressesMinValue.Text) < Convert.ToInt32(FakeAddressesCount.Text))
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("", @"Bad range of IP addresses");
                 }
 
                 Setup.FakeIpAddressMin = Convert.ToInt32(FakeAddressesMinValue.Text);
                 Setup.FakeIpAddressMax = Convert.ToInt32(FakeAddressesMaxValue.Text);
             }
+            else Setup.Ddos = false;
         }
 
         private void CheckAndAssertAdditionalSettings()
@@ -333,20 +322,14 @@ namespace PacketCannon
             if ((bool)DDosCheckBox.IsChecked)
             {
                 FakeAddressesCount.IsEnabled = true;
-                FakeAddressesCount.Visibility = Visibility.Visible;
                 FakeAddressesMaxValue.IsEnabled = true;
-                FakeAddressesMaxValue.Visibility = Visibility.Visible;
                 FakeAddressesMinValue.IsEnabled = true;
-                FakeAddressesMinValue.Visibility = Visibility.Visible;
             }
             else
             {
                 FakeAddressesCount.IsEnabled = false;
-                FakeAddressesCount.Visibility = Visibility.Hidden;
                 FakeAddressesMaxValue.IsEnabled = false;
-                FakeAddressesMaxValue.Visibility = Visibility.Hidden;
                 FakeAddressesMinValue.IsEnabled = false;
-                FakeAddressesMinValue.Visibility = Visibility.Hidden;
             }
             FakeAddressesCount.IsEnabled = DDosCheckBox.IsChecked == true;
         }
