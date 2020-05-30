@@ -17,6 +17,8 @@ namespace PacketCannon
         public DosController Setup;
         private Thread _senders;
 
+        public ShutdownMode ShutdownMode { get; }
+
         public MainWindow()
         {
             Setup = new DosController();
@@ -24,6 +26,7 @@ namespace PacketCannon
 
             this.DataContext = Setup;
             ResetAllAdditionalSettingsFields();
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
 
         private void HostIpAddressChanged(object sender, TextChangedEventArgs e)
@@ -172,24 +175,31 @@ namespace PacketCannon
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            Setup.Terminate = false;
-            StartButton.IsEnabled = false;
-            StopButton.IsEnabled = true;
+            try
+            {
+                Setup.Terminate = false;
+                StartButton.IsEnabled = false;
+                StopButton.IsEnabled = true;
 
-            Attacks.IsEnabled = false;
-            GetMackAddressButton.IsEnabled = false;
-            SelectInterfaceButton.IsEnabled = false;
-            if (CheckAllRequiredFields())
-            {
-                _senders = new Thread(Setup.StartSenders);
-                _senders.Start();
-                LoadingWheel.Visibility = Visibility.Visible;
+                Attacks.IsEnabled = false;
+                GetMackAddressButton.IsEnabled = false;
+                SelectInterfaceButton.IsEnabled = false;
+                if (CheckAllRequiredFields())
+                {
+                    _senders = new Thread(Setup.StartSenders);
+                    _senders.Start();
+                    LoadingWheel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Attacks.IsEnabled = true;
+                    GetMackAddressButton.IsEnabled = true;
+                    SelectInterfaceButton.IsEnabled = true;
+                }
             }
-            else
+            catch (Exception x)
             {
-                Attacks.IsEnabled = true;
-                GetMackAddressButton.IsEnabled = true;
-                SelectInterfaceButton.IsEnabled = true;
+                MessageBox.Show(x.Message + "\n" + x.StackTrace, "Packet Cannon", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -313,7 +323,8 @@ namespace PacketCannon
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            Environment.Exit(0);
             Application.Current.Shutdown();
         }
 

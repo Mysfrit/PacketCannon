@@ -20,7 +20,7 @@ namespace PacketCannon
     {
         private static readonly Random _rand = new Random();
 
-        public DosSender(IPacketDevice packetDevice, string sourceIp, string destIp, MacAddress destMac, MacAddress sourceMac, string host, string slowLorisKeepAliveData, string slowLorisHeaderNotComplete, int slowPostHeaderContentLength, string slowPostHeader, string slowReadUrl, int startPort, int portStep, bool ddos = false)
+        public DosSender(string sourceIp, string destIp, MacAddress destMac, MacAddress sourceMac, string host, string slowLorisKeepAliveData, string slowLorisHeaderNotComplete, int slowPostHeaderContentLength, string slowPostHeader, string slowReadUrl, int startPort, int portStep, bool ddos = false)
         {
             if (ddos)
             {
