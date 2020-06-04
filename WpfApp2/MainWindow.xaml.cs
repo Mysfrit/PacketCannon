@@ -1,16 +1,19 @@
 ﻿using PcapDotNet.Core;
 using PcapDotNet.Packets.Ethernet;
 using System;
+using System.Security.Permissions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PacketCannon
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow
     {
         public PacketDevice PacketDevice;
@@ -21,12 +24,23 @@ namespace PacketCannon
 
         public MainWindow()
         {
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+
             Setup = new DosController();
             InitializeComponent();
 
             this.DataContext = Setup;
             ResetAllAdditionalSettingsFields();
             ShutdownMode = ShutdownMode.OnLastWindowClose;
+        }
+
+        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string errorMessage = $"An unhandled exception occurred: {e.Exception.Message}";
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            // OR whatever you want like logging etc. MessageBox it's just example
+            // for quick debugging etc.
+            e.Handled = true;
         }
 
         private void HostIpAddressChanged(object sender, TextChangedEventArgs e)
