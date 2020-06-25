@@ -1,12 +1,10 @@
 ﻿using PcapDotNet.Core;
 using PcapDotNet.Packets.Ethernet;
 using System;
-using System.Security.Permissions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace PacketCannon
 {
@@ -38,8 +36,7 @@ namespace PacketCannon
         {
             string errorMessage = $"An unhandled exception occurred: {e.Exception.Message}";
             MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            // OR whatever you want like logging etc. MessageBox it's just example
-            // for quick debugging etc.
+
             e.Handled = true;
         }
 
@@ -262,7 +259,7 @@ namespace PacketCannon
 
         private void CheckDDosSettings()
         {
-            if ((bool)DDosCheckBox.IsChecked)
+            if (DDosCheckBox.IsChecked != null && (bool)DDosCheckBox.IsChecked)
             {
                 Setup.Ddos = true;
                 if (FakeAddressesCount.Text != "")
@@ -339,12 +336,11 @@ namespace PacketCannon
             base.OnClosed(e);
             System.Diagnostics.Process.GetCurrentProcess().Kill();
             Environment.Exit(0);
-            Application.Current.Shutdown();
         }
 
         private void EnableDDosClicked(object sender, RoutedEventArgs e)
         {
-            if ((bool)DDosCheckBox.IsChecked)
+            if (DDosCheckBox.IsChecked != null && (bool)DDosCheckBox.IsChecked)
             {
                 FakeAddressesCount.IsEnabled = true;
                 FakeAddressesMaxValue.IsEnabled = true;
